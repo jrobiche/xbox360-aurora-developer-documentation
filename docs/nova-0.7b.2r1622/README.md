@@ -1,5 +1,17 @@
 # NOVA 0.7b.2 r1622 Documentation
 
+## OpenAPI Definition
+
+An OpenAPI definition of this API can be found in this repository at [swagger-ui/nova-0.7b.2r1622.yaml](./swagger-ui/nova-0.7b.2r1622.yaml). Both the YAML and JSON formats have been included because the Swagger Editor supports YAML but the Swagger UI currently only supports JSON.
+
+For an interactive version of this documentation, you can run an instance of Swagger UI on your console. This can be achieved by completing the following steps:
+
+1. Launch Aurora on your console
+
+2. Using FTP, copy the [swagger-ui](./swagger-ui) directory into `/Game/Plugins/WebRoot` directory on your console
+
+3. The Swagger UI documentation should now be accessible at `http://{YOUR_CONSOLE_IP}:9999/swagger-ui/index.html`
+
 ## Resources
 
 ### Achievement
