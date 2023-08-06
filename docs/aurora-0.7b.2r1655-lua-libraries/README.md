@@ -1,20 +1,20 @@
 # Aurora 0.7b.2 r1655 Lua Libraries Documentation
 
-Version: Lua 5.3
+Version: Lua 5.3.3
 
 ## Global
 
-| Documentation | Function Definition                   | Description                                                                                  |
-| ------------- | ------------------------------------- | -------------------------------------------------------------------------------------------- |
-| _TODO_        | *table* **enum** *(array val)*        | Create a *table* that acts as an _enum_.                                                     |
-| _TODO_        | _void_ **print** _(string val)_       | Print the string _val_ to `Game:\Data\Logs\debug.log`.                                       |
-| _TODO_        | _unsigned_ **tounsigned** _(int val)_ | Convert _val_ to a 32-bit unsigned integer. _Note: This may also be referred to as a DWORD._ |
-| _TODO_        | _void_ **tprint** _(table val)_       | Print the table _val_ to `Game:\Data\Logs\debug.log`.                                        |
-| _TODO_        | _void_ **wait** _(unsigned val)_      | Wait for _val_ milliseconds.                                                                 |
+| Documentation | Function Declaration                  | Description                                                                                                           |
+| ------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| _TODO_        | *table* **enum** *(array val)*        | Create a *table* that acts as an _enum_.                                                                              |
+| _TODO_        | _void_ **print** _(string val)_       | Print the string _val_ to `Game:\Data\Logs\debug.log`.                                                                |
+| _TODO_        | _unsigned_ **tounsigned** _(int val)_ | Convert _val_ to a 32-bit unsigned integer.<br/>_Note: A 32-bit unsigned integer may also be referred to as a DWORD._ |
+| _TODO_        | _void_ **tprint** _(table val)_       | Print the table _val_ to `Game:\Data\Logs\debug.log`.                                                                 |
+| _TODO_        | _void_ **wait** _(unsigned val)_      | Wait for _val_ milliseconds.                                                                                          |
 
 ## Aurora
 
-| Documentation                                | Function Definition                                   | Description                                                     |
+| Documentation                                | Function Declaration                                  | Description                                                     |
 | -------------------------------------------- | ----------------------------------------------------- | --------------------------------------------------------------- |
 | [Details](./aurora_closedvdtray.md)          | _void_ **Aurora.CloseDVDTray** _()_                   | Close the DVD tray.                                             |
 | [Details](./aurora_crc32hash.md)             | _string_ **Aurora.Crc32Hash** _(string input)_        | Return CRC-32 checksum of a string.                             |
@@ -43,7 +43,7 @@ Version: Lua 5.3
 
 ## Content
 
-| Documentation                       | Function Definition                                                                             | Description                                                 |
+| Documentation                       | Function Declaration                                                                            | Description                                                 |
 | ----------------------------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
 | [Details](./content_findcontent.md) | _table_ **Content.FindContent** _(unsigned titleid, [string titleName])_                        | Find entries in content database matching certain criteria. |
 | [Details](./content_getinfo.md)     | _table_ **Content.GetInfo** _(unsigned contentId)_                                              | Return entry in content database with given Id.             |
@@ -58,112 +58,112 @@ Version: Lua 5.3
 
 ## Dvd
 
-| Documentation                    | Function Definition                  | Description                                    |
+| Documentation                    | Function Declaration                 | Description                                    |
 | -------------------------------- | ------------------------------------ | ---------------------------------------------- |
-| [Details](./dvd_closetray.md)    | *void* **Dvd.CloseTray** _()_        | Close the DVD tray.                            |
+| [Details](./dvd_closetray.md)    | *boolean* **Dvd.CloseTray** _()_     | Close the DVD tray.                            |
 | [Details](./dvd_getmediatype.md) | _unsigned_ **Dvd.GetMediaType** _()_ | Return the media type of disc in the DVD tray. |
 | [Details](./dvd_gettraystate.md) | _unsigned_ **Dvd.GetTrayState** _()_ | Return current state of the DVD tray.          |
-| [Details](./dvd_opentray.md)     | *void* **Dvd.OpenTray** *()*         | Open the DVD tray.                             |
+| [Details](./dvd_opentray.md)     | *boolean* **Dvd.OpenTray** *()*      | Open the DVD tray.                             |
 
 ## FileSystem
 
-| Documentation | Function Definition                                                                                                    | Description                                           |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| _TODO_        | _boolean_ **FileSystem.CopyDirectory** _(string srcDir, string dstDir, boolean overwrite, [function progressRoutine])_ | Copy a directory from *srcDir* to _dstDir_.           |
-| _TODO_        | _boolean_ **FileSystem.CopyFile** _(string srcFile, string dstFile, boolean overwrite, [function progressRoutine])_    | Copy a file from *srcFile* to _dstFile_.              |
-| _TODO_        | _boolean_ **FileSystem.CreateDirectory** _(string directory)_                                                          | Create a directory at _directory_.                    |
-| _TODO_        | _boolean_ **FileSystem.DeleteDirectory** _(string directory)_                                                          | Delete the directory at _directory_.                  |
-| _TODO_        | _boolean_ **FileSystem.DeleteFile** _(string file)_                                                                    | Delete the file at _file_.                            |
-| _TODO_        | _boolean_ **FileSystem.FileExists** _(string path)_                                                                    | Determine if  a file exists at _path_.                |
-| _TODO_        | _unsigned_ **FileSystem.GetAttributes** _(string path)_                                                                | Get the attributes of a file or directory at _path_.  |
-| _TODO_        | _table_ **FileSystem.GetDirectories** _(string path)_                                                                  | Get a table of directories within _path_.             |
-| _TODO_        | _table_ **FileSystem.GetDrives** _([boolean contentDrivesOnly])_                                                       | Get a table of mounted drives.                        |
-| _TODO_        | _unsigned_ **FileSystem.GetFileSize** _(string path)_                                                                  | Get the size of the file at _path_.                   |
-| _TODO_        | _table_ **FileSystem.GetFiles** _(string path)_                                                                        | Get a table of files within _path_.                   |
-| _TODO_        | _table_ **FileSystem.GetFilesAndDirectories** _(string path)_                                                          | Get a table of files and directories within _path_.   |
-| _TODO_        | FileSystem.GetPartitionFreeSpace()                                                                                     |                                                       |
-| _TODO_        | FileSystem.GetPartitionSize()                                                                                          |                                                       |
-| _TODO_        | FileSystem.GetPartitionUsedSpace()                                                                                     |                                                       |
-| _TODO_        | FileSystem.InstallTitleFromDisc()                                                                                      |                                                       |
-| _TODO_        | _boolean_ **FileSystem.MoveDirectory** _(string srcDir, string dstDir, boolean overwrite, [function progressRoutine])_ | Move a directory from *srcDir* to _dstDir_.           |
-| _TODO_        | _boolean_ **FileSystem.MoveFile** _(string srcFile, string dstFile, boolean overwrite, [function progressRoutine])_    | Move a file from *srcFile* to _dstFile_.              |
-| _TODO_        | _string_ **Filesystem.ReadFile** _(string srcFile)_                                                                    | Return the contents of *srcFile* as a string.         |
-| _TODO_        | _boolean_ **FileSystem.Rename** _(string original, string new)_                                                        | Rename a path from *original* to _new_.               |
-| _TODO_        | _boolean_ **FileSystem.WriteFile** _(string srcFile, string buffer)_                                                   | Write the value of *buffer* into a file at _srcFile_. |
+| Documentation | Function Declaration                                                                                                           | Description                                                        |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------ |
+| _TODO_        | _boolean_ **FileSystem.CopyDirectory** _(string srcDir, string dstDir, boolean overwrite, [function progressRoutine])_         | Copy a directory from *srcDir* to _dstDir_.                        |
+| _TODO_        | _boolean_ **FileSystem.CopyFile** _(string srcFile, string dstFile, boolean overwrite, [function progressRoutine])_            | Copy a file from *srcFile* to _dstFile_.                           |
+| _TODO_        | _boolean_ **FileSystem.CreateDirectory** _(string directory)_                                                                  | Create a directory at _directory_.                                 |
+| _TODO_        | _boolean_ **FileSystem.DeleteDirectory** _(string directory)_                                                                  | Delete the directory at _directory_.                               |
+| _TODO_        | _boolean_ **FileSystem.DeleteFile** _(string file)_                                                                            | Delete the file at _file_.                                         |
+| _TODO_        | _boolean_ **FileSystem.FileExists** _(string path)_                                                                            | Determine if  a file exists at _path_.                             |
+| _TODO_        | _unsigned_ **FileSystem.GetAttributes** _(string path)_                                                                        | Get the attributes of a file or directory at _path_.               |
+| _TODO_        | _table_ **FileSystem.GetDirectories** _(string path)_                                                                          | Get a table of directories within _path_.                          |
+| _TODO_        | _table_ **FileSystem.GetDrives** _([boolean contentDrivesOnly])_                                                               | Get a table of mounted drives.                                     |
+| _TODO_        | _unsigned_ **FileSystem.GetFileSize** _(string path)_                                                                          | Get the size of the file at _path_.                                |
+| _TODO_        | _table_ **FileSystem.GetFiles** _(string path)_                                                                                | Get a table of files within _path_.                                |
+| _TODO_        | _table_ **FileSystem.GetFilesAndDirectories** _(string path)_                                                                  | Get a table of files and directories within _path_.                |
+| _TODO_        | *number* **FileSystem.GetPartitionFreeSpace** _(string driveName)_                                                             |                                                                    |
+| _TODO_        | _number_ **FileSystem.GetPartitionSize** _(string driveName)_                                                                  |                                                                    |
+| _TODO_        | *number* **FileSystem.GetPartitionUsedSpace** _(string driveName)_                                                             |                                                                    |
+| _TODO_        | _boolean_ **FileSystem.InstallTitleFromDisc** _(string virtualTargetPath, bool createContentDirs, [function progressRoutine])_ | Install the game in the DVD drive in Games On Demand (GOD) format. |
+| _TODO_        | _boolean_ **FileSystem.MoveDirectory** _(string srcDir, string dstDir, boolean overwrite, [function progressRoutine])_         | Move a directory from *srcDir* to _dstDir_.                        |
+| _TODO_        | _boolean_ **FileSystem.MoveFile** _(string srcFile, string dstFile, boolean overwrite, [function progressRoutine])_            | Move a file from *srcFile* to _dstFile_.                           |
+| _TODO_        | _string_ **Filesystem.ReadFile** _(string srcFile)_                                                                            | Return the contents of *srcFile* as a string.                      |
+| _TODO_        | _boolean_ **FileSystem.Rename** _(string original, string new)_                                                                | Rename a path from *original* to _new_.                            |
+| _TODO_        | _boolean_ **FileSystem.WriteFile** _(string srcFile, string buffer)_                                                           | Write the value of *buffer* into a file at _srcFile_.              |
 
 ## GizmoUI
 
-| Documentation | Function Definition      | Description |
-| ------------- | ------------------------ | ----------- |
-| _TODO_        | GizmoUI.CreateInstance() |             |
+| Documentation | Function Declaration                       | Description |
+| ------------- | ------------------------------------------ | ----------- |
+| _TODO_        | _userdata_ **GizmoUI.CreateInstance** _()_ |             |
 
 ## Http
 
-| Documentation | Function Definition                                                             | Description                                                                                               |
-| ------------- | ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| _TODO_        | _table_ **Http.Get** _(string url, [string relativeFilePath])_                  | Perform a GET request to _url_.                                                                           |
-| _TODO_        | Http.GetEx()                                                                    |                                                                                                           |
-| _TODO_        | _table_ **Http.Post** _(string url, table postvars, [string relativeFilePath])_ | Perform a POST request to _url_.                                                                          |
-| _TODO_        | Http.PostEx()                                                                   |                                                                                                           |
-| _TODO_        | _string_ **Http.UrlDecode** _(string input)_                                    | Return the decoded value of the [url encoded](https://en.wikipedia.org/wiki/URL_encoding) *input* string. |
-| _TODO_        | _string_ **Http.UrlEncode** _(string input)_                                    | Return the [url encoded](https://en.wikipedia.org/wiki/URL_encoding) value of the *input* string.         |
+| Documentation | Function Declaration                                                                                        | Description                                                                                               |
+| ------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| _TODO_        | _table_ **Http.Get** _(string url, [string relativeFilePath])_                                              | Perform a GET request to _url_.                                                                           |
+| _TODO_        | _table_ **Http.GetEx** _(string url, function progressRoutine, [string relativeFilePath])_                  |                                                                                                           |
+| _TODO_        | _table_ **Http.Post** _(string url, table postvars, [string relativeFilePath])_                             | Perform a POST request to _url_.                                                                          |
+| _TODO_        | _table_ **Http.PostEx** _(string url, table postvars, function progressRoutine, [string relativeFilePath])_ |                                                                                                           |
+| _TODO_        | _string_ **Http.UrlDecode** _(string input)_                                                                | Return the decoded value of the [url encoded](https://en.wikipedia.org/wiki/URL_encoding) *input* string. |
+| _TODO_        | _string_ **Http.UrlEncode** _(string input)_                                                                | Return the [url encoded](https://en.wikipedia.org/wiki/URL_encoding) value of the *input* string.         |
 
 ## IniFile
 
-| Documentation | Function Definition                                         | Description |
+| Documentation | Function Declaration                                        | Description |
 | ------------- | ----------------------------------------------------------- | ----------- |
 | _TODO_        | _userdata_ **IniFile.LoadFile** _(string relativeFilePath)_ |             |
 | _TODO_        | _userdata_ **IniFile.LoadString** _(string fileData)_       |             |
 
 ## Kernel
 
-| Documentation | Function Definition                                                                                      | Description |
-| ------------- | -------------------------------------------------------------------------------------------------------- | ----------- |
-| _TODO_        | _string_ **Kernel.GetCPUKey** _()_                                                                       |             |
-| _TODO_        | _unsigned_ **Kernel.GetCPUTempThreshold** _()_                                                           |             |
-| _TODO_        | _string_ **Kernel.GetConsoleId** _()_                                                                    |             |
-| _TODO_        | _unsigned_ **Kernel.GetConsoleTiltState** _()_                                                           |             |
-| _TODO_        | _string_ **Kernel.GetConsoleType** _()_                                                                  |             |
-| _TODO_        | _string_ **Kernel.GetDVDKey** _()_                                                                       |             |
-| _TODO_        | _unsigned_ **Kernel.GetEDRAMTempThreshold** _()_                                                         |             |
-| _TODO_        | _unsigned_ **Kernel.GetGPUTempThreshold** _()_                                                           |             |
-| _TODO_        | _string_ **Kernel.GetMotherboardType** _()_                                                              |             |
-| _TODO_        | _string_ **Kernel.GetSerialNumber** _()_                                                                 |             |
-| _TODO_        | _table_ **Kernel.GetVersion** _()_                                                                       |             |
-| _TODO_        | _void_ **Kernel.RebootSMCRoutine** _()_                                                                  |             |
-| _TODO_        | _boolean_ **Kernel.SetCPUTempThreshold** _(unsigned threshold)_                                          |             |
-| _TODO_        | _boolean_ **Kernel.SetDate** _(unsigned Year, unsigned Month, unsigned Day)_                             |             |
-| _TODO_        | _boolean_ **Kernel.SetEDRAMTempThreshold** _(unsigned threshold)_                                        |             |
-| _TODO_        | _boolean_ **Kernel.SetFanSpeed** _(unsigned fanSpeed)_                                                   |             |
-| _TODO_        | _boolean_ **Kernel.SetGPUTempThreshold** _(unsigned threshold)_                                          |             |
-| _TODO_        | _boolean_ **Kernel.SetTime** _(unsigned Hour, [unsigned Minute, unsigned Second, unsigned Millisecond])_ |             |
+| Documentation | Function Declaration                                                                                     | Description                                                            |
+| ------------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| _TODO_        | _string_ **Kernel.GetCPUKey** _()_                                                                       | Return the console's CPU key.                                          |
+| _TODO_        | _unsigned_ **Kernel.GetCPUTempThreshold** _()_                                                           |                                                                        |
+| _TODO_        | _string_ **Kernel.GetConsoleId** _()_                                                                    |                                                                        |
+| _TODO_        | _unsigned_ **Kernel.GetConsoleTiltState** _()_                                                           | Determine if the console is lying horizontally or standing vertically. |
+| _TODO_        | _string_ **Kernel.GetConsoleType** _()_                                                                  |                                                                        |
+| _TODO_        | _string_ **Kernel.GetDVDKey** _()_                                                                       | Return the console's DVD key.                                          |
+| _TODO_        | _unsigned_ **Kernel.GetEDRAMTempThreshold** _()_                                                         |                                                                        |
+| _TODO_        | _unsigned_ **Kernel.GetGPUTempThreshold** _()_                                                           |                                                                        |
+| _TODO_        | _string_ **Kernel.GetMotherboardType** _()_                                                              | Return the console's motherboard type.                                 |
+| _TODO_        | _string_ **Kernel.GetSerialNumber** _()_                                                                 | Return the console's serial number.                                    |
+| _TODO_        | _table_ **Kernel.GetVersion** _()_                                                                       | Return the console's  dashboard version.                               |
+| _TODO_        | _void_ **Kernel.RebootSMCRoutine** _()_                                                                  |                                                                        |
+| _TODO_        | _boolean_ **Kernel.SetCPUTempThreshold** _(unsigned threshold)_                                          |                                                                        |
+| _TODO_        | _boolean_ **Kernel.SetDate** _(unsigned Year, unsigned Month, unsigned Day)_                             |                                                                        |
+| _TODO_        | _boolean_ **Kernel.SetEDRAMTempThreshold** _(unsigned threshold)_                                        |                                                                        |
+| _TODO_        | _boolean_ **Kernel.SetFanSpeed** _(unsigned fanSpeed)_                                                   |                                                                        |
+| _TODO_        | _boolean_ **Kernel.SetGPUTempThreshold** _(unsigned threshold)_                                          |                                                                        |
+| _TODO_        | _boolean_ **Kernel.SetTime** _(unsigned Hour, [unsigned Minute, unsigned Second, unsigned Millisecond])_ |                                                                        |
 
 ## Profile
 
-| Documentation | Function Definition                                                                | Description |
+| Documentation | Function Declaration                                                               | Description |
 | ------------- | ---------------------------------------------------------------------------------- | ----------- |
-| _TODO_        | Profile.EnumerateProfiles()                                                        |             |
+| _TODO_        | _table_ **Profile.EnumerateProfiles** _()_                                         |             |
 | _TODO_        | _unsigned_ **Profile.GetGamerScore** _(unsigned playerIndex)_                      |             |
 | _TODO_        | _string_ **Profile.GetGamerTag** _(unsigned playerIndex)_                          |             |
-| _TODO_        | Profile.GetProfilePicture()                                                        |             |
+| _TODO_        | _boolean_ **Profile.GetProfilePicture** _(string xuid)_                            |             |
 | _TODO_        | _table_ **Profile.GetTitleAchievement** _(unsigned playerIndex, unsigned titleId)_ |             |
 | _TODO_        | _string_ **Profile.GetXUID** _(unsigned playerIndex)_                              |             |
-| _TODO_        | Profile.Login()                                                                    |             |
-| _TODO_        | Profile.Logout()                                                                   |             |
+| _TODO_        | *boolean* Profile.Login _(unsigned playerIndex, string xuid)_                      |             |
+| _TODO_        | _boolean_ **Profile.Logout** _(unsigned playerIndex)_                              |             |
 
 ## Script
 
-| Documentation | Function Definition                                                                                 | Description |
+| Documentation | Function Declaration                                                                                | Description |
 | ------------- | --------------------------------------------------------------------------------------------------- | ----------- |
 | _TODO_        | _void_ **Script.CreateDirectory** _(string relativePath)_                                           |             |
 | _TODO_        | _void_ **Script.FileExists** _(string relativePath)_                                                |             |
 | _TODO_        | _string_ **Script.GetBasePath** _()_                                                                |             |
 | _TODO_        | _unsigned_ **Script.GetProgress** _()_                                                              |             |
 | _TODO_        | _string_ **Script.GetStatus** _()_                                                                  |             |
-| _TODO_        | Script.IsCancelEnabled()                                                                            |             |
+| _TODO_        | _boolean_ **Script.IsCancelEnabled** _()_                                                           |             |
 | _TODO_        | _boolean_ **Script.IsCanceled** _()_                                                                |             |
 | _TODO_        | _void_ **Script.RefreshListOnExit** _(boolean refreshList)_                                         |             |
-| _TODO_        | Script.SetCancelEnable()                                                                            |             |
+| _TODO_        | _void_ **Script.SetCancelEnable** _(boolean cancelEnabled)_                                         |             |
 | _TODO_        | _void_ **Script.SetProgress** _(unsigned val)_                                                      |             |
 | _TODO_        | _void_ **Script.SetStatus** _(string text)_                                                         |             |
 | _TODO_        | _table_ **Script.ShowFilebrowser** _(string basePath, string selectedItem, [unsigned flags])_       |             |
@@ -171,41 +171,41 @@ Version: Lua 5.3
 | _TODO_        | _table_ **Script.ShowMessageBox** _(string title, string prompt, string button1text, [string ...])_ |             |
 | _TODO_        | _void_ **Script.ShowNotification** _(string message, unsigned type)_                                |             |
 | _TODO_        | _table_ **Script.ShowPasscode** _(string title, string prompt, unsigned permissionFlag)_            |             |
-| _TODO_        | Script.ShowPasscodeEx()                                                                             |             |
+| _TODO_        | _table_ **Script.ShowPasscodeEx** _(string title, string prompt)_                                   |             |
 | _TODO_        | _table_ **Script.ShowPopupList** _(string title, string emptyList, table listContent)_              |             |
 
 ## Settings
 
-| Documentation | Function Definition                                                                | Description |
+| Documentation | Function Declaration                                                               | Description |
 | ------------- | ---------------------------------------------------------------------------------- | ----------- |
-| _TODO_        | Settings.AddRSSFeed()                                                              |             |
-| _TODO_        | Settings.DeleteRSSFeed()                                                           |             |
+| _TODO_        | _unsigned_ **Settings.AddRSSFeed** _(string url, [bool enabled])_                  |             |
+| _TODO_        | _boolean_ **Settings.DeleteRSSFeed** _(unsigned feedId)_                           |             |
 | _TODO_        | _table_ **Settings.GetOptions** _(string name, unsigned settingType)_              |             |
-| _TODO_        | Settings.GetRSSFeedByID()                                                          |             |
-| _TODO_        | Settings.GetRSSFeeds()                                                             |             |
+| _TODO_        | _table_ **Settings.GetRSSFeedById** _(unsigned feedId)_                            |             |
+| _TODO_        | _table_ **Settings.GetRSSFeeds** _([bool enabledOnly])_                            |             |
 | _TODO_        | _table_ **Settings.GetSystem** _([string, ...])_                                   |             |
 | _TODO_        | _table_ **Settings.GetSystemOptions** _(string name)_                              |             |
 | _TODO_        | _table_ **Settings.GetUser** _([string, ...])_                                     |             |
 | _TODO_        | _table_ **Settings.GetUserOptions** _(string name)_                                |             |
 | _TODO_        | _table_ **Settings.SetSystem** _(string name, string value, [string, string ...])_ |             |
 | _TODO_        | _table_ **Settings.SetUser** _(string name, string value, [string, string ...])_   |             |
-| _TODO_        | Settings.UpdateRSSFeed()                                                           |             |
+| _TODO_        | _boolean_ **Settings.UpdateRSSFeed** _(unsigned feedId, string url, bool enabled)_ |             |
 
 ## Sql
 
-| Documentation | Function Definition                                 | Description |
-| ------------- | --------------------------------------------------- | ----------- |
-| _TODO_        | _boolean_ **Sql.Execute** _(string query)_          |             |
-| _TODO_        | _boolean_ **Sql.ExecuteFetchRows** _(string query)_ |             |
+| Documentation              | Function Declaration                                | Description                                                                                                                                                                                                             |
+| -------------------------- | --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| _TODO_                     | _boolean_ **Sql.Execute** _(string query)_          | Execute the _query_ query string against the `Game:\Data\Databases\content.db` database.<br/>_Note: This function should be used with a query that does not return data, such as a DELETE query._                       |
+| *TODO* confirm return type | _boolean_ **Sql.ExecuteFetchRows** _(string query)_ | Execute the _query_ query string against the `Game:\Data\Databases\content.db` database and return the resulting rows.<br/>_Note: This function should be used with a query that returns data, such as a SELECT query._ |
 
 ## Thread
 
-| Documentation | Function Definition                               | Description |
-| ------------- | ------------------------------------------------- | ----------- |
-| _TODO_        | _void_ **Thread.Sleep** _(unsigned milliseconds)_ |             |
+| Documentation | Function Declaration                              | Description                                         |
+| ------------- | ------------------------------------------------- | --------------------------------------------------- |
+| _TODO_        | _void_ **Thread.Sleep** _(unsigned milliseconds)_ | Freeze the console for *milliseconds* milliseconds. |
 
 ## ZipFile
 
-| Documentation | Function Definition                                         | Description |
+| Documentation | Function Declaration                                        | Description |
 | ------------- | ----------------------------------------------------------- | ----------- |
 | _TODO_        | _userdata_ **ZipFile.OpenFile** _(string relativeFilePath)_ |             |
