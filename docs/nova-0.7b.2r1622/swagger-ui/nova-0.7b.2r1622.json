@@ -1,0 +1,2222 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "NOVA HTTP API",
+    "description": "NOVA 0.7b.2 r1622",
+    "version": "0.7b.2 r1622"
+  },
+  "servers": [
+    {
+      "url": "/"
+    },
+    {
+      "url": "http://{CONSOLE_IP}:9999",
+      "variables": {
+        "CONSOLE_IP": {
+          "default": "",
+          "description": "IP Address of console running Aurora"
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "achievement",
+      "description": "Operations about achievements"
+    },
+    {
+      "name": "authenticate",
+      "description": "Operations about authentication"
+    },
+    {
+      "name": "dashlaunch",
+      "description": "Operations about Dashlaunch"
+    },
+    {
+      "name": "image",
+      "description": "Operations about images"
+    },
+    {
+      "name": "memory",
+      "description": "Operations about memory"
+    },
+    {
+      "name": "multidisc",
+      "description": "Operations about multidisc games"
+    },
+    {
+      "name": "plugin",
+      "description": "Operations about NOVA plugin"
+    },
+    {
+      "name": "profile",
+      "description": "Operations about profiles"
+    },
+    {
+      "name": "screen capture",
+      "description": "Operations about screen captures"
+    },
+    {
+      "name": "smc",
+      "description": "Operations about SMC"
+    },
+    {
+      "name": "system",
+      "description": "Operations about system"
+    },
+    {
+      "name": "systemlink",
+      "description": "Operations about LiNK"
+    },
+    {
+      "name": "temperature",
+      "description": "Operations about temperature"
+    },
+    {
+      "name": "thread",
+      "description": "Operations about threads"
+    },
+    {
+      "name": "title",
+      "description": "Operations about titles"
+    },
+    {
+      "name": "update",
+      "description": "Operations about console events"
+    }
+  ],
+  "paths": {
+    "/achievement": {
+      "get": {
+        "tags": [
+          "achievement"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get information about achievements for the running title",
+        "description": "",
+        "operationId": "getAchievement",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Achievement"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Running title does not have any achievements"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/achievement/player": {
+      "get": {
+        "tags": [
+          "achievement"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get information about each player's unlock status for each achievement of the running title",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AchievementPlayer"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Running title does not have any achievements"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authenticate": {
+      "post": {
+        "tags": [
+          "authenticate"
+        ],
+        "summary": "Request a JWT for use when authenticating subsequent requests",
+        "description": "",
+        "operationId": "postAuthenticate",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "default": "xboxhttp"
+                  },
+                  "password": {
+                    "type": "string",
+                    "default": "xboxhttp"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Authentication"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dashlaunch": {
+      "get": {
+        "tags": [
+          "dashlaunch"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get information about Dashlaunch settings",
+        "operationId": "getDashlaunch",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Dashlaunch"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/image/achievement": {
+      "get": {
+        "tags": [
+          "image"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Download achievement tile image in PNG format for running title",
+        "operationId": "getImageAchievement",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "Value of `imageid` of an `Achievement` returned by a successful GET /achievement request",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/image/profile": {
+      "get": {
+        "tags": [
+          "image"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Download gamer picture in BMP format of a signed in player",
+        "operationId": "getImageProfile",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "Value of `index` of a `Profile` returned by a successful GET /profile request",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "format": "u32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/image/screencapture": {
+      "get": {
+        "tags": [
+          "image"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Download a screencapture in BMP format for the running title",
+        "operationId": "getScreencapture",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "Value of `filename` of a `Screencapture` returned by a successful GET /screencapture/meta/list request or a successful GET /screencapture/meta request",
+            "required": true,
+            "explode": true,
+            "schema": {
+              "type": "integer",
+              "format": "u32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/memory": {
+      "get": {
+        "tags": [
+          "memory"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get the free, used, and total bytes of RAM",
+        "description": "",
+        "operationId": "getMemory",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Memory"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/multidisc": {
+      "get": {
+        "tags": [
+          "multidisc"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get information about the different discs that make up the running title",
+        "description": "",
+        "operationId": "getMultidisc",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Multidisc"
+                  }
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "Running title is not a multidisc title"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/plugin": {
+      "get": {
+        "tags": [
+          "plugin"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get information about the NOVA plugin",
+        "description": "",
+        "operationId": "getPlugin",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plugin"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profile": {
+      "get": {
+        "tags": [
+          "profile"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get information about logged in profiles",
+        "description": "",
+        "operationId": "getProfile",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Profile"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/screencapture": {
+      "delete": {
+        "tags": [
+          "screen capture"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Delete screen capture",
+        "description": "",
+        "operationId": "deleteScreencapture",
+        "parameters": [
+          {
+            "name": "uuid",
+            "in": "query",
+            "description": "Value of `filename` of a `Screencapture` returned by a successful GET /screencapture/meta/list request or a successful GET /screencapture/meta request",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Screen capture was deleted"
+          },
+          "400": {
+            "description": "Invalid filename supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/screencapture/meta": {
+      "get": {
+        "tags": [
+          "screen capture"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Take a screen capture",
+        "description": "",
+        "operationId": "getScreencaptureMeta",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScreencaptureMeta"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/screencapture/meta/list": {
+      "get": {
+        "tags": [
+          "screen capture"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get information about screen captures taken for the running title",
+        "description": "",
+        "operationId": "getScreencaptureMetaList",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScreencaptureMeta"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/smc": {
+      "get": {
+        "tags": [
+          "smc"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get information about the System Management Controller",
+        "description": "",
+        "operationId": "getSmc",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Smc"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/system": {
+      "get": {
+        "tags": [
+          "system"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get information about the console",
+        "description": "",
+        "operationId": "getSystem",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/System"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/systemlink": {
+      "get": {
+        "tags": [
+          "systemlink"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get information about LiNK configuration",
+        "description": "",
+        "operationId": "getSystemlink",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Systemlink"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/systemlink/bandwidth": {
+      "get": {
+        "tags": [
+          "systemlink"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get information about LiNK network usage",
+        "description": "",
+        "operationId": "getSystemlinkBandwidth",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SystemlinkBandwidth"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/temperature": {
+      "get": {
+        "tags": [
+          "temperature"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get temperatures of console components",
+        "description": "Get the current temperature of the CPU, GPU, RAM, and case",
+        "operationId": "getTemperature",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Temperature"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/thread": {
+      "get": {
+        "tags": [
+          "thread"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get information about threads",
+        "description": "",
+        "operationId": "getThread",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Thread"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/thread/state": {
+      "get": {
+        "tags": [
+          "thread"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get state of main thread",
+        "description": "",
+        "operationId": "getThreadState",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThreadState"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "thread"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Set state of main thread",
+        "description": "",
+        "operationId": "postThreadState",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "suspend": {
+                    "description": "- 0: Resume thread\n- 1: Suspend thread\n",
+                    "type": "string",
+                    "enum": [
+                      "0",
+                      "1"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Thread state was updated"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/title": {
+      "get": {
+        "tags": [
+          "title"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get information about the running title",
+        "description": "",
+        "operationId": "getTitle",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Title"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/title/file": {
+      "get": {
+        "tags": [
+          "title"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Download a file from the `Game:\\` directory",
+        "operationId": "getTitleFile",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "description": "Path to file relative to the `Game:\\` drive",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/title/launch": {
+      "post": {
+        "tags": [
+          "title"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Launch an executable",
+        "description": "",
+        "operationId": "postTitleLaunch",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "exec": {
+                    "description": "File name of executable",
+                    "type": "string"
+                  },
+                  "path": {
+                    "description": "Directory containing executable file. Possible root directories:\n| Drive | Path |\n| --- | --- |\n| Dvd:\\ | `\\Device\\Cdrom0` |\n| Flash:\\ | `\\SystemRoot` |\n| HdDvdPlayer:\\ | `\\Device\\HdDvdPlayer` |\n| HdDvdStorage:\\ | `\\Device\\HdDvdStorage` |\n| Hdd0:\\ | `\\Device\\Harddisk0\\Partition0` |\n| Hdd1:\\ | `\\Device\\Harddisk0\\Partition1` |\n| Hddx:\\ | `\\Device\\Harddisk0\\SystemPartition` |\n| Memunit0:\\ | `\\Device\\Mu0` |\n| Memunit1:\\ | `\\Device\\Mu1` |\n| SysExt:\\ | `\\sep` |\n| Transfercable:\\ | `\\Device\\Transfercable` |\n| TransfercableXbox1:\\ | `\\Device\\Transfercable\\Compatibility\\Xbox1` |\n| USBMU0:\\ | `\\Device\\Mass0PartitionFile\\Storage` |\n| USBMU1:\\ | `\\Device\\Mass1PartitionFile\\Storage` |\n| USBMU2:\\ | `\\Device\\Mass2PartitionFile\\Storage` |\n| USBMUCache0:\\ | `\\Device\\Mass0PartitionFile\\StorageSystem` |\n| USBMUCache1:\\ | `\\Device\\Mass1PartitionFile\\StorageSystem` |\n| USBMUCache2:\\ | `\\Device\\Mass2PartitionFile\\StorageSystem` |\n| Usb0:\\ | `\\Device\\Mass0` |\n| Usb1:\\ | `\\Device\\Mass1` |\n| Usb2:\\ | `\\Device\\Mass2` |\nOn board memory unit can be any of the following:\n| Drive | Path |\n| --- | --- |\n| OnBoardMU:\\ | `\\Device\\BuiltInMuMmc\\Storage` |\n| OnBoardMU:\\ | `\\Device\\BuiltInMuSfc` |\n| OnBoardMU:\\ | `\\Device\\BuiltInMuUsb\\Storage` |\n",
+                    "type": "string"
+                  },
+                  "type": {
+                    "description": "- -1: None\n- 0: Xbox 360 Executable (xex)\n- 1: Classic Xbox Executable (xbe)\n- 2: Xbox 360 Container\n- 3: Classic Xbox Container\n- 4: XNA Container\n",
+                    "type": "integer",
+                    "format": "i32",
+                    "enum": [
+                      -1,
+                      0,
+                      1,
+                      2,
+                      3,
+                      4
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Title launched"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/title/live/cache": {
+      "get": {
+        "tags": [
+          "title"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get xbox live catalog information for the running title",
+        "operationId": "getTitleLiveCache",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "text/plain; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "title"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Set xbox live catalog information for the running title",
+        "description": "",
+        "operationId": "postTitleLiveCache",
+        "parameters": [
+          {
+            "name": "liveinfo",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created live cache for title"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/update/notification": {
+      "get": {
+        "tags": [
+          "update"
+        ],
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ],
+        "summary": "Get information about changes in achievements, profiles, screenshots, and titles",
+        "description": "",
+        "operationId": "getUpdateNotification",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateNotification"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Achievement": {
+        "type": "object",
+        "properties": {
+          "cred": {
+            "description": "Gamerscore rewarded when achievement is unlocked",
+            "type": "integer",
+            "format": "u32",
+            "example": 100
+          },
+          "hidden": {
+            "description": "- 0: Achievment is not hidden\n- 1: Achievement is hidden\n",
+            "type": "integer",
+            "format": "u32",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "id": {
+            "type": "integer",
+            "format": "u32"
+          },
+          "imageid": {
+            "description": "Value of `uuid` when performing a GET /image/achievement request",
+            "type": "integer",
+            "format": "u32"
+          },
+          "strings": {
+            "type": "object",
+            "properties": {
+              "caption": {
+                "description": "Caption shown above description",
+                "type": "string"
+              },
+              "description": {
+                "description": "Description shown if achievement is unlocked",
+                "type": "string"
+              },
+              "unachieved": {
+                "description": "Description shown if achievement is locked",
+                "type": "string"
+              }
+            }
+          },
+          "type": {
+            "description": "- 1: Completion\n- 2: Leveling\n- 3: Unlock\n- 4: Event\n- 5: Tournament\n- 6: Checkpoint\n- 7: Other\n",
+            "type": "integer",
+            "format": "u32",
+            "enum": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ]
+          }
+        }
+      },
+      "AchievementPlayer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The `id` of an `Achievement` returned by a successful GET /achievement request",
+            "type": "integer",
+            "format": "u32",
+            "example": 0
+          },
+          "player": {
+            "description": "List of unlock status of achievement for each player",
+            "type": "array",
+            "maxLength": 4,
+            "minLength": 4,
+            "items": {
+              "description": "- 0: Player has not unlocked the achievement\n- 1: Player has unlocked the achievement\n",
+              "type": "integer",
+              "format": "u32",
+              "enum": [
+                0,
+                1
+              ]
+            }
+          }
+        }
+      },
+      "Authentication": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "description": "JWT to use when authenticating subsequent requests",
+            "type": "string"
+          }
+        }
+      },
+      "Dashlaunch": {
+        "type": "object",
+        "properties": {
+          "options": {
+            "description": "List of Dashlaunch options",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "Id of Dashlaunch option",
+                  "type": "integer"
+                },
+                "category": {
+                  "description": "Category of Dashlaunch option",
+                  "type": "string",
+                  "enum": [
+                    "Behavior",
+                    "Extern",
+                    "Net",
+                    "Paths",
+                    "Plugins",
+                    "Timer"
+                  ]
+                },
+                "name": {
+                  "description": "Name of Dashlaunch option",
+                  "type": "string"
+                },
+                "value": {
+                  "description": "Value of Dashlaunch option",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "version": {
+            "description": "Dashlaunch version information",
+            "type": "object",
+            "properties": {
+              "kernel": {
+                "description": "Kernel version of console that Dashlaunch is built for",
+                "type": "integer",
+                "example": 17599,
+                "format": "u32"
+              },
+              "number": {
+                "description": "Version number of Dashlaunch",
+                "type": "object",
+                "properties": {
+                  "build": {
+                    "description": "Build version of Dashlaunch",
+                    "type": "integer",
+                    "format": "u32"
+                  },
+                  "major": {
+                    "description": "Major version of Dashlaunch",
+                    "type": "integer",
+                    "format": "u32"
+                  },
+                  "minor": {
+                    "description": "Minor version of Dashlaunch",
+                    "type": "integer",
+                    "format": "u32"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Memory": {
+        "type": "object",
+        "properties": {
+          "free": {
+            "description": "Number of unused bytes of RAM",
+            "type": "integer",
+            "format": "u32"
+          },
+          "total": {
+            "description": "Total number of bytes of RAM",
+            "type": "integer",
+            "format": "u32"
+          },
+          "used": {
+            "description": "Number of used bytes of RAM",
+            "type": "integer",
+            "format": "u32"
+          }
+        }
+      },
+      "Multidisc": {
+        "type": "object",
+        "properties": {
+          "disc": {
+            "description": "",
+            "type": "object",
+            "properties": {
+              "current": {
+                "description": "Entry index of the running title. **Note**: Entry index starts at 1.",
+                "type": "integer",
+                "format": "u32"
+              },
+              "total": {
+                "description": "Number of discs that make up the running title",
+                "type": "integer",
+                "format": "u32"
+              }
+            }
+          },
+          "entries": {
+            "description": "",
+            "type": "array",
+            "maxLength": 5,
+            "minLength": 5,
+            "items": {
+              "type": "object",
+              "properties": {
+                "container": {
+                  "description": "- 0: Executable is not in container format\n- 1: Executable is in container format\n",
+                  "type": "integer",
+                  "enum": [
+                    0,
+                    1
+                  ]
+                },
+                "path": {
+                  "description": "Path to title's executable",
+                  "type": "string",
+                  "example": "\\Device\\Harddisk0\\Partition1\\content\\0000000000000000\\ffffffff\\00007000\\00000000000000000000"
+                }
+              }
+            }
+          },
+          "titleid": {
+            "description": "Hexidecimal string of running title's titleid",
+            "type": "string",
+            "example": "0xFFFFFFFF"
+          }
+        }
+      },
+      "Plugin": {
+        "type": "object",
+        "properties": {
+          "features": {
+            "description": "",
+            "type": "object",
+            "properties": {
+              "achievements": {
+                "description": "- 0: Plugin supports achievements\n- 1: Plugin does not support achievements\n",
+                "type": "integer",
+                "enum": [
+                  0,
+                  1
+                ]
+              },
+              "debugger": {
+                "description": "- 0: Plugin supports debugger\n- 1: Plugin does not support debugger\n",
+                "type": "integer",
+                "enum": [
+                  0,
+                  1
+                ]
+              },
+              "gamepad": {
+                "description": "- 0: Plugin supports gamepad\n- 1: Plugin does not support gamepad\n",
+                "type": "integer",
+                "enum": [
+                  0,
+                  1
+                ]
+              },
+              "httpdaemon": {
+                "description": "- 0: Plugin supports httpdaemon\n- 1: Plugin does not support httpdaemon\n",
+                "type": "integer",
+                "enum": [
+                  0,
+                  1
+                ]
+              },
+              "multidisc": {
+                "description": "- 0: Plugin supports multidisc\n- 1: Plugin does not support multidisc\n",
+                "type": "integer",
+                "enum": [
+                  0,
+                  1
+                ]
+              },
+              "network": {
+                "description": "- 0: Plugin supports network\n- 1: Plugin does not support network\n",
+                "type": "integer",
+                "enum": [
+                  0,
+                  1
+                ]
+              },
+              "systemlink": {
+                "description": "- 0: Plugin supports systemlink\n- 1: Plugin does not support systemlink\n",
+                "type": "integer",
+                "enum": [
+                  0,
+                  1
+                ]
+              },
+              "threads": {
+                "description": "- 0: Plugin supports threads\n- 1: Plugin does not support threads\n",
+                "type": "integer",
+                "enum": [
+                  0,
+                  1
+                ]
+              },
+              "trainers": {
+                "description": "- 0: Plugin supports trainers\n- 1: Plugin does not support trainers\n",
+                "type": "integer",
+                "enum": [
+                  0,
+                  1
+                ]
+              }
+            }
+          },
+          "path": {
+            "description": "",
+            "type": "object",
+            "properties": {
+              "launcher": {
+                "description": "Path to launcher executable",
+                "type": "string",
+                "example": "\\Device\\Harddisk0\\Partition1\\Aurora\\Aurora.xex"
+              },
+              "root": {
+                "description": "Path to `Plugins` directory",
+                "type": "string",
+                "example": "\\Device\\Harddisk0\\Partition1\\Aurora\\Plugins"
+              },
+              "user": {
+                "description": "Path to `UserData` directory",
+                "type": "string",
+                "example": "\\Device\\Harddisk0\\Partition1\\Aurora\\Plugins\\UserData"
+              },
+              "web": {
+                "description": "Path to `WebRoot` directory",
+                "type": "string",
+                "example": "\\Device\\Harddisk0\\Partition1\\Aurora\\Plugins\\WebRoot"
+              }
+            }
+          },
+          "version": {
+            "description": "",
+            "type": "object",
+            "properties": {
+              "api": {
+                "description": "API version",
+                "type": "integer",
+                "format": "u32"
+              },
+              "number": {
+                "description": "NOVA plugin version",
+                "type": "object",
+                "properties": {
+                  "build": {
+                    "description": "Build version of NOVA plugin",
+                    "type": "integer",
+                    "format": "u32"
+                  },
+                  "major": {
+                    "description": "Major version of NOVA plugin",
+                    "type": "integer",
+                    "format": "u32"
+                  },
+                  "minor": {
+                    "description": "Minor version of NOVA plugin",
+                    "type": "integer",
+                    "format": "u32"
+                  },
+                  "type": {
+                    "description": "- 1: Alpha\n- 2: Beta\n- 3: Release\n",
+                    "type": "integer",
+                    "enum": [
+                      1,
+                      2,
+                      3
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Profile": {
+        "type": "array",
+        "maxLength": 4,
+        "minLength": 4,
+        "items": {
+          "type": "object",
+          "properties": {
+            "gamerscore": {
+              "description": "Profile's gamerscore",
+              "type": "integer",
+              "format": "u32"
+            },
+            "gamertag": {
+              "description": "Profile's gamertag",
+              "type": "string"
+            },
+            "index": {
+              "description": "- 0: Player 1\n- 1: Player 2\n- 2: Player 3\n- 3: Player 4\n",
+              "type": "integer",
+              "enum": [
+                0,
+                1,
+                2,
+                3
+              ]
+            },
+            "signedin": {
+              "description": "- 0: Not signed in\n- 1: Signed in\n",
+              "type": "integer",
+              "enum": [
+                0,
+                1
+              ]
+            },
+            "xuid": {
+              "description": "Profile's XUID",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ScreencaptureMeta": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "description": "Name of the screen capture formatted as `{titleid}{timestamp}`",
+            "type": "string",
+            "example": ""
+          },
+          "filesize": {
+            "description": "Size of the screen capture in bytes",
+            "type": "integer",
+            "format": "u32"
+          },
+          "info": {
+            "type": "object",
+            "properties": {
+              "format": {
+                "description": "Format of the screen capture",
+                "type": "string",
+                "example": "A8R8G8B8"
+              },
+              "height": {
+                "description": "Height of the screen capture in pixels",
+                "type": "integer",
+                "format": "u32"
+              },
+              "width": {
+                "description": "Width of the screen capture in pixels",
+                "type": "integer",
+                "format": "u32"
+              }
+            }
+          },
+          "timestamp": {
+            "description": "UTC timestamp of when the screen capture was taken formatted as `YYYYmmddHHMMSSsss`",
+            "type": "string"
+          },
+          "titleid": {
+            "description": "Hexidecimal string of the title's `titleid`",
+            "type": "string"
+          }
+        }
+      },
+      "Smc": {
+        "type": "object",
+        "properties": {
+          "avpack": {
+            "description": "- 0: Unknown\n- 1: HDMI\n- 2: Component\n- 3: VGA\n- 4: Composite TV\n- 5: Composite HD\n- 6: HDMI Audio\n",
+            "type": "integer",
+            "format": "u32",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          },
+          "dvdmediatype": {
+            "description": "- 0: None\n- 1: Xbox 360\n- 2: Xbox Classic\n- 3: Unknown\n- 4: DVD Audio\n- 5: DVD Movie\n- 6: CD Video\n- 7: CD Audio\n- 8: CD Data\n- 9: Game Movie Hybrid\n- 10: HD DVD\n",
+            "type": "integer",
+            "format": "u32",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10
+            ]
+          },
+          "smcversion": {
+            "description": "Version of SMC",
+            "type": "string",
+            "example": "3.1"
+          },
+          "temperature": {
+            "type": "object",
+            "properties": {
+              "celsius": {
+                "description": "- true: Unit of temperature values is Celsius\n- false: Unit of temperature values is Fahrenheit\n",
+                "type": "boolean"
+              },
+              "max": {
+                "type": "object",
+                "properties": {
+                  "cpu": {
+                    "description": "Shutdown if CPU temperature reaches this value",
+                    "type": "number",
+                    "format": "f32"
+                  },
+                  "gpu": {
+                    "description": "Shutdown if GPU temperature reaches this value",
+                    "type": "number",
+                    "format": "f32"
+                  },
+                  "memory": {
+                    "description": "Shutdown if RAM temperature reaches this value",
+                    "type": "number",
+                    "format": "f32"
+                  }
+                }
+              },
+              "target": {
+                "type": "object",
+                "properties": {
+                  "cpu": {
+                    "description": "Fans will attempt to maintain this temperature for the CPU",
+                    "type": "number",
+                    "format": "f32"
+                  },
+                  "gpu": {
+                    "description": "Fans will attempt to maintain this temperature for the GPU",
+                    "type": "number",
+                    "format": "f32"
+                  },
+                  "memory": {
+                    "description": "Fans will attempt to maintain this temperature for the RAM",
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          },
+          "tiltstate": {
+            "description": "- 0: Horizontal\n- 1: Vertical\n",
+            "type": "integer",
+            "format": "u32",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "traystate": {
+            "description": "- 0: Idle\n- 1: Closing\n- 2: Open\n- 3: Opening\n- 4: Closed\n- 5: Error\n",
+            "type": "integer",
+            "format": "u32",
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        }
+      },
+      "System": {
+        "type": "object",
+        "properties": {
+          "console": {
+            "type": "object",
+            "properties": {
+              "motherboard": {
+                "description": "",
+                "type": "string",
+                "enum": [
+                  "Xenon",
+                  "Zephyr",
+                  "Opus",
+                  "Falcon",
+                  "Jasper",
+                  "Trinity",
+                  "Corona"
+                ]
+              },
+              "type": {
+                "description": "",
+                "type": "string",
+                "enum": [
+                  "Devkit",
+                  "Retail"
+                ]
+              }
+            }
+          },
+          "consoleid": {
+            "description": "Console's product id",
+            "type": "string"
+          },
+          "cpukey": {
+            "description": "Console's CPU key",
+            "type": "string"
+          },
+          "dvdkey": {
+            "description": "Console's DVD key",
+            "type": "string"
+          },
+          "serial": {
+            "description": "Console's serial number",
+            "type": "string"
+          },
+          "version": {
+            "type": "object",
+            "properties": {
+              "build": {
+                "description": "Dashboard's build version",
+                "type": "integer",
+                "format": "u32"
+              },
+              "major": {
+                "description": "Dashboard's major version",
+                "type": "integer",
+                "format": "u32"
+              },
+              "minor": {
+                "description": "Dashboard's minor version",
+                "type": "integer",
+                "format": "u32"
+              },
+              "qfe": {
+                "description": "Dashboard's quick-fix engineering version",
+                "type": "integer",
+                "format": "u32"
+              }
+            }
+          }
+        }
+      },
+      "Systemlink": {
+        "type": "object",
+        "properties": {
+          "apikey": {
+            "description": "Unity API key",
+            "type": "string"
+          },
+          "broadcastport": {
+            "description": "Broadcast port used by LiNK",
+            "type": "integer",
+            "format": "u32"
+          },
+          "dataport": {
+            "description": "Data port used by LiNK",
+            "type": "integer",
+            "format": "u32"
+          },
+          "enabled": {
+            "description": "- 0: LiNK is not enabled\n- 1: LiNK is enabled\n",
+            "type": "integer",
+            "format": "u32",
+            "enum": [
+              0,
+              1
+            ]
+          },
+          "gatewayip": {
+            "description": "Router's IP address",
+            "type": "string"
+          },
+          "gatewaymac": {
+            "description": "Router's MAC address",
+            "type": "string"
+          },
+          "username": {
+            "description": "Unity username",
+            "type": "string"
+          },
+          "xboxip": {
+            "description": "Console's IP address",
+            "type": "string"
+          },
+          "xboxmac": {
+            "description": "Console's MAC address",
+            "type": "string"
+          }
+        }
+      },
+      "SystemlinkBandwidth": {
+        "type": "object",
+        "properties": {
+          "bytes": {
+            "type": "object",
+            "properties": {
+              "downstream": {
+                "description": "Number of bytes that LiNK has downloaded",
+                "type": "integer",
+                "format": "u32"
+              },
+              "upstream": {
+                "description": "Number of bytes that LiNK has uploaded",
+                "type": "integer",
+                "format": "u32"
+              }
+            }
+          },
+          "rate": {
+            "type": "object",
+            "properties": {
+              "downstream": {
+                "description": "Current download speed",
+                "type": "number",
+                "format": "f32"
+              },
+              "upstream": {
+                "description": "Current upload speed",
+                "type": "number",
+                "format": "f32"
+              }
+            }
+          }
+        }
+      },
+      "Temperature": {
+        "type": "object",
+        "properties": {
+          "case": {
+            "description": "Temperature of the case",
+            "type": "number",
+            "format": "f32"
+          },
+          "celsius": {
+            "description": "- true: Unit of temperature values is Celsius\n- false: Unit of temperature values is Fahrenheit\n",
+            "type": "boolean"
+          },
+          "cpu": {
+            "description": "Temperature of the CPU",
+            "type": "number",
+            "format": "f32"
+          },
+          "gpu": {
+            "description": "Temperature of the GPU",
+            "type": "number",
+            "format": "f32"
+          },
+          "memory": {
+            "description": "Temperature of the RAM",
+            "type": "number",
+            "format": "f32"
+          }
+        }
+      },
+      "Thread": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "description": "",
+            "type": "string"
+          },
+          "flags": {
+            "description": "",
+            "type": "string"
+          },
+          "id": {
+            "description": "",
+            "type": "string"
+          },
+          "priority": {
+            "description": "",
+            "type": "integer",
+            "format": "u32"
+          },
+          "state": {
+            "description": "",
+            "type": "integer",
+            "format": "u32"
+          },
+          "type": {
+            "description": "",
+            "type": "integer",
+            "format": "u32"
+          }
+        }
+      },
+      "ThreadState": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "description": "- 0: Thread is active\n- 2: Thread is suspended\n",
+            "type": "integer",
+            "format": "u32",
+            "enum": [
+              0,
+              2
+            ]
+          }
+        }
+      },
+      "Title": {
+        "type": "object",
+        "properties": {
+          "disc": {
+            "type": "object",
+            "properties": {
+              "count": {
+                "description": "Number of discs tha tmake up the running title",
+                "type": "integer",
+                "format": "u32"
+              },
+              "current": {
+                "description": "Entry index of the running title. Corresponds to `disc.current` property of a `Multidisc`",
+                "type": "integer",
+                "format": "u32"
+              }
+            }
+          },
+          "mediaid": {
+            "description": "Hexidecimal string of the running title's media id",
+            "type": "string"
+          },
+          "path": {
+            "description": "Path to running title's executable",
+            "type": "string",
+            "example": "\\Device\\Harddisk0\\Partition1\\Aurora\\Aurora.xex"
+          },
+          "resolution": {
+            "type": "object",
+            "properties": {
+              "height": {
+                "description": "Height of video output in pixels",
+                "type": "integer",
+                "format": "u32"
+              },
+              "width": {
+                "description": "Width of video output in pixels",
+                "type": "integer",
+                "format": "u32"
+              }
+            }
+          },
+          "titleid": {
+            "description": "Hexidecimal string of the running title's title id",
+            "type": "string"
+          },
+          "tuver": {
+            "description": "Title update version",
+            "type": "integer",
+            "format": "u32"
+          },
+          "version": {
+            "type": "object",
+            "properties": {
+              "base": {
+                "description": "",
+                "type": "string"
+              },
+              "current": {
+                "description": "",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "UpdateNotification": {
+        "type": "object",
+        "properties": {
+          "achievements": {
+            "description": "Number of titles launched during the current session that contain achievements<br/>\n*Note: Value increments by 2 each time a new title containing achievements is launched*\n",
+            "type": "integer",
+            "format": "u32"
+          },
+          "profiles": {
+            "description": "Number of times profiles have been signed into or out of during the current session\n*Note: Value also increments when a new title is launched*\n",
+            "type": "integer",
+            "format": "u32"
+          },
+          "screencapture": {
+            "description": "Number of screen captures taken during the current session",
+            "type": "integer",
+            "format": "u32"
+          },
+          "title": {
+            "description": "Number of titles launched during the current session",
+            "type": "integer",
+            "format": "u32"
+          }
+        }
+      },
+      "UnauthorizedResponse": {
+        "type": "string",
+        "example": "<html>\n  <head>\n    <title>Nova</title>\n  </head>\n  <body>\n  <h1>Unauthorized</h1>\n  </body>\n</html>\n"
+      },
+      "NotFoundResponse": {
+        "type": "string",
+        "example": "<html>\n  <head>\n    <title>Nova</title>\n  </head>\n  <body>\n  <h1>Resource Not Found</h1>\n  </body>\n</html>\n"
+      }
+    },
+    "securitySchemes": {
+      "bearer_auth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
