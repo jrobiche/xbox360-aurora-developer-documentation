@@ -20,6 +20,8 @@ tags:
     description: Operations about authentication
   - name: dashlaunch
     description: Operations about Dashlaunch
+  - name: filebrowser
+    description: Operations about filebrowsing
   - name: image
     description: Operations about images
   - name: memory
@@ -54,25 +56,25 @@ paths:
       security:
         - bearer_auth: []
       summary: Get information about achievements for the running title
-      description: ''
+      description: ""
       operationId: getAchievement
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Achievement'
-        '204':
+                  $ref: "#/components/schemas/Achievement"
+        "204":
           description: Running title does not have any achievements
-        '401':
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /achievement/player:
     get:
       tags:
@@ -80,30 +82,30 @@ paths:
       security:
         - bearer_auth: []
       summary: Get information about each player's unlock status for each achievement of the running title
-      description: ''
+      description: ""
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/AchievementPlayer'
-        '204':
+                  $ref: "#/components/schemas/AchievementPlayer"
+        "204":
           description: Running title does not have any achievements
-        '401':
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /authenticate:
     post:
       tags:
         - authenticate
       summary: Request a JWT for use when authenticating subsequent requests
-      description: ''
+      description: ""
       operationId: postAuthenticate
       requestBody:
         content:
@@ -119,18 +121,18 @@ paths:
                   default: xboxhttp
         required: true
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Authentication'
-        '401':
+                $ref: "#/components/schemas/Authentication"
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /dashlaunch:
     get:
       tags:
@@ -140,18 +142,67 @@ paths:
       summary: Get information about Dashlaunch settings
       operationId: getDashlaunch
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Dashlaunch'
-        '401':
+                $ref: "#/components/schemas/Dashlaunch"
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
+  /filebrowser:
+    get:
+      tags:
+        - filebrowser
+      security:
+        - bearer_auth: []
+      summary: View details of files and directories
+      operationId: getFilebrowser
+      parameters:
+        - name: path
+          in: query
+          description: |
+            View details of item at this path. Paths ending with `\` will display
+            the contents of the directory as opposed to the directory itself.
+
+            Example: If Aurora is running you can list the database files using
+            the path `Game:\Data\Databases\`
+          required: false
+          explode: true
+          schema:
+            type: string
+        - name: filter
+          in: query
+          description: "Return the items at `path` whose `name` matches this filter"
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/FilebrowserEntry"
+        "401":
+          description: Unauthorized
+          content:
+            text/html:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponse"
+        "404":
+          description: Not Found
+          content:
+            text/html:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
   /image/achievement:
     get:
       tags:
@@ -163,31 +214,31 @@ paths:
       parameters:
         - name: uuid
           in: query
-          description: 'Value of `imageid` of an `Achievement` returned by a successful GET /achievement request'
+          description: "Value of `imageid` of an `Achievement` returned by a successful `GET /achievement` request"
           required: true
           explode: true
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             image/png:
               schema:
                 type: string
                 format: binary
-        '401':
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
-        '404':
+                $ref: "#/components/schemas/UnauthorizedResponse"
+        "404":
           description: Not Found
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/NotFoundResponse'
+                $ref: "#/components/schemas/NotFoundResponse"
   /image/profile:
     get:
       tags:
@@ -199,32 +250,31 @@ paths:
       parameters:
         - name: uuid
           in: query
-          description: 'Value of `index` of a `Profile` returned by a successful GET /profile request'
+          description: "Value of `index` of a `ProfileEntry` returned by a successful `GET /profile` request"
           required: true
           explode: true
           schema:
-            type: integer
-            format: u32
+            type: string
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
-            image/png:
+            image/bmp:
               schema:
                 type: string
                 format: binary
-        '401':
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
-        '404':
+                $ref: "#/components/schemas/UnauthorizedResponse"
+        "404":
           description: Not Found
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/NotFoundResponse'
+                $ref: "#/components/schemas/NotFoundResponse"
   /image/screencapture:
     get:
       tags:
@@ -236,32 +286,31 @@ paths:
       parameters:
         - name: uuid
           in: query
-          description: 'Value of `filename` of a `Screencapture` returned by a successful GET /screencapture/meta/list request or a successful GET /screencapture/meta request'
+          description: "Value of `filename` of a `ScreencaptureMeta` returned by a successful `GET /screencapture/meta/list` request or a successful `GET /screencapture/meta` request"
           required: true
           explode: true
           schema:
-            type: integer
-            format: u32
+            type: string
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
-            image/png:
+            image/bmp:
               schema:
                 type: string
                 format: binary
-        '401':
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
-        '404':
+                $ref: "#/components/schemas/UnauthorizedResponse"
+        "404":
           description: Not Found
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/NotFoundResponse'
+                $ref: "#/components/schemas/NotFoundResponse"
   /memory:
     get:
       tags:
@@ -269,21 +318,21 @@ paths:
       security:
         - bearer_auth: []
       summary: Get the free, used, and total bytes of RAM
-      description: ''
+      description: ""
       operationId: getMemory
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Memory'
-        '401':
+                $ref: "#/components/schemas/Memory"
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /multidisc:
     get:
       tags:
@@ -291,25 +340,25 @@ paths:
       security:
         - bearer_auth: []
       summary: Get information about the different discs that make up the running title
-      description: ''
+      description: ""
       operationId: getMultidisc
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Multidisc'
-        '204':
+                  $ref: "#/components/schemas/Multidisc"
+        "204":
           description: Running title is not a multidisc title
-        '401':
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /plugin:
     get:
       tags:
@@ -317,21 +366,21 @@ paths:
       security:
         - bearer_auth: []
       summary: Get information about the NOVA plugin
-      description: ''
+      description: ""
       operationId: getPlugin
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Plugin'
-        '401':
+                $ref: "#/components/schemas/Plugin"
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /profile:
     get:
       tags:
@@ -339,45 +388,58 @@ paths:
       security:
         - bearer_auth: []
       summary: Get information about logged in profiles
-      description: ''
+      description: ""
       operationId: getProfile
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Profile'
-        '401':
+                type: array
+                maxLength: 4
+                minLength: 4
+                items:
+                  $ref: "#/components/schemas/ProfileEntry"
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /screencapture:
     delete:
       tags:
         - screen capture
       security:
         - bearer_auth: []
-      summary: Delete screen capture
-      description: ''
+      summary: Delete a screen capture
+      description: ""
       operationId: deleteScreencapture
       parameters:
         - name: uuid
           in: query
-          description: 'Value of `filename` of a `Screencapture` returned by a successful GET /screencapture/meta/list request or a successful GET /screencapture/meta request'
+          description: "Value of `filename` of a `ScreencaptureMeta` returned by a successful `GET /screencapture/meta/list` request or a successful `GET /screencapture/meta` request"
           required: true
           schema:
             type: string
-      # TODO confirm
       responses:
-        '204':
+        "204":
           description: Screen capture was deleted
-        '400':
+        "400":
           description: Invalid filename supplied
-        '404':
-          description: User not found
+        "401":
+          description: Unauthorized
+          content:
+            text/html:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponse"
+        "404":
+          description: Not Found
+          content:
+            text/html:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
   /screencapture/meta:
     get:
       tags:
@@ -385,47 +447,67 @@ paths:
       security:
         - bearer_auth: []
       summary: Take a screen capture
-      description: ''
+      description: ""
       operationId: getScreencaptureMeta
-      # TODO confirm
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ScreencaptureMeta'
-        '401':
+                $ref: "#/components/schemas/ScreencaptureMeta"
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /screencapture/meta/list:
     get:
       tags:
         - screen capture
       security:
         - bearer_auth: []
-      summary: Get information about screen captures taken for the running title
-      description: ''
+      summary: Get information about screen captures available for the running title
+      description: ""
       operationId: getScreencaptureMetaList
-      # TODO confirm
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ScreencaptureMeta'
-        '401':
+                  $ref: "#/components/schemas/ScreencaptureMeta"
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
+  /screencapture/meta/list/count:
+    get:
+      tags:
+        - screen capture
+      security:
+        - bearer_auth: []
+      summary: Get the number of screen captures available for the running title
+      description: ""
+      operationId: getScreencaptureMetaListCount
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScreencaptureMetaListCount"
+        "401":
+          description: Unauthorized
+          content:
+            text/html:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /smc:
     get:
       tags:
@@ -433,22 +515,21 @@ paths:
       security:
         - bearer_auth: []
       summary: Get information about the System Management Controller
-      description: ''
+      description: ""
       operationId: getSmc
-      # TODO confirm
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Smc'
-        '401':
+                $ref: "#/components/schemas/Smc"
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /system:
     get:
       tags:
@@ -456,22 +537,21 @@ paths:
       security:
         - bearer_auth: []
       summary: Get information about the console
-      description: ''
+      description: ""
       operationId: getSystem
-      # TODO confirm
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/System'
-        '401':
+                $ref: "#/components/schemas/System"
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /systemlink:
     get:
       tags:
@@ -479,22 +559,21 @@ paths:
       security:
         - bearer_auth: []
       summary: Get information about LiNK configuration
-      description: ''
+      description: ""
       operationId: getSystemlink
-      # TODO confirm
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Systemlink'
-        '401':
+                $ref: "#/components/schemas/Systemlink"
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /systemlink/bandwidth:
     get:
       tags:
@@ -502,23 +581,21 @@ paths:
       security:
         - bearer_auth: []
       summary: Get information about LiNK network usage
-      description: ''
+      description: ""
       operationId: getSystemlinkBandwidth
-      # TODO confirm
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SystemlinkBandwidth'
-        '401':
+                $ref: "#/components/schemas/SystemlinkBandwidth"
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
-  ### VERIFIED ABOVE
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /temperature:
     get:
       tags:
@@ -526,21 +603,21 @@ paths:
       security:
         - bearer_auth: []
       summary: Get temperatures of console components
-      description: 'Get the current temperature of the CPU, GPU, RAM, and case'
+      description: "Get the current temperature of the CPU, GPU, RAM, and case"
       operationId: getTemperature
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Temperature'
-        '401':
+                $ref: "#/components/schemas/Temperature"
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /thread:
     get:
       tags:
@@ -548,24 +625,23 @@ paths:
       security:
         - bearer_auth: []
       summary: Get information about threads
-      description: ''
+      description: ""
       operationId: getThread
-      # TODO confirm
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Thread'
-        '401':
+                  $ref: "#/components/schemas/Thread"
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /thread/state:
     get:
       tags:
@@ -573,28 +649,28 @@ paths:
       security:
         - bearer_auth: []
       summary: Get state of main thread
-      description: ''
+      description: ""
       operationId: getThreadState
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ThreadState'
-        '401':
+                $ref: "#/components/schemas/ThreadState"
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
     post:
       tags:
         - thread
       security:
         - bearer_auth: []
       summary: Set state of main thread
-      description: ''
+      description: ""
       operationId: postThreadState
       requestBody:
         content:
@@ -612,14 +688,14 @@ paths:
                     - "1"
         required: true
       responses:
-        '202':
+        "202":
           description: Thread state was updated
-        '401':
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /title:
     get:
       tags:
@@ -627,21 +703,21 @@ paths:
       security:
         - bearer_auth: []
       summary: Get information about the running title
-      description: ''
+      description: ""
       operationId: getTitle
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Title'
-        '401':
+                $ref: "#/components/schemas/Title"
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /title/file:
     get:
       tags:
@@ -653,30 +729,31 @@ paths:
       parameters:
         - name: path
           in: query
-          description: 'Path to file relative to the `Game:\` drive'
+          description: |
+            Path to file relative to the `Game:\` drive<br/>_Note: Some files such as Aurora\'s `content.db` cannot be downloaded_
           required: true
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/octet-stream:
               schema:
                 type: string
                 format: binary
-        '401':
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
-        '404':
+                $ref: "#/components/schemas/UnauthorizedResponse"
+        "404":
           description: Not Found
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/NotFoundResponse'
+                $ref: "#/components/schemas/NotFoundResponse"
   /title/launch:
     post:
       tags:
@@ -684,7 +761,7 @@ paths:
       security:
         - bearer_auth: []
       summary: Launch an executable
-      description: ''
+      description: ""
       operationId: postTitleLaunch
       requestBody:
         content:
@@ -693,7 +770,7 @@ paths:
               type: object
               properties:
                 exec:
-                  description: 'File name of executable'
+                  description: "File name of executable"
                   type: string
                 path:
                   description: |
@@ -747,14 +824,14 @@ paths:
                     - 4
         required: true
       responses:
-        '202':
+        "202":
           description: Title launched
-        '401':
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /title/live/cache:
     get:
       tags:
@@ -764,83 +841,83 @@ paths:
       summary: Get xbox live catalog information for the running title
       operationId: getTitleLiveCache
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             text/plain; charset=utf-8:
               schema:
                 type: string
-        '401':
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
-        '404':
+                $ref: "#/components/schemas/UnauthorizedResponse"
+        "404":
           description: Not Found
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/NotFoundResponse'
+                $ref: "#/components/schemas/NotFoundResponse"
     post:
       tags:
         - title
       security:
         - bearer_auth: []
       summary: Set xbox live catalog information for the running title
-      description: ''
+      description: ""
       operationId: postTitleLiveCache
       parameters:
         - name: liveinfo
           in: query
-          description: ''
+          description: ""
           required: true
           schema:
             type: string
       responses:
-        '201':
+        "201":
           description: Created live cache for title
-        '401':
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
   /update/notification:
     get:
       tags:
         - update
       security:
         - bearer_auth: []
-      summary: Get information about changes in achievements, profiles, screenshots, and titles
-      description: ''
+      summary: Get information about changes in achievements, profiles, screen captures, and titles
+      description: ""
       operationId: getUpdateNotification
       responses:
-        '200':
+        "200":
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UpdateNotification'
-        '401':
+                $ref: "#/components/schemas/UpdateNotification"
+        "401":
           description: Unauthorized
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/UnauthorizedResponse'
+                $ref: "#/components/schemas/UnauthorizedResponse"
 components:
   schemas:
     Achievement:
       type: object
       properties:
         cred:
-          description: 'Gamerscore rewarded when achievement is unlocked'
+          description: "Gamerscore rewarded when achievement is unlocked"
           type: integer
           format: u32
           example: 100
         hidden:
           description: |
-            - 0: Achievment is not hidden
+            - 0: Achievement is not hidden
             - 1: Achievement is hidden
           type: integer
           format: u32
@@ -848,23 +925,24 @@ components:
             - 0
             - 1
         id:
+          description: "Id of the achievement"
           type: integer
           format: u32
         imageid:
-          description: 'Value of `uuid` when performing a GET /image/achievement request'
+          description: "Value of `uuid` when performing a GET /image/achievement request"
           type: integer
           format: u32
         strings:
           type: object
           properties:
             caption:
-              description: 'Caption shown above description'
+              description: "Caption shown above description"
               type: string
             description:
-              description: 'Description shown if achievement is unlocked'
+              description: "Description shown if achievement is unlocked"
               type: string
             unachieved:
-              description: 'Description shown if achievement is locked'
+              description: "Description shown if achievement is locked"
               type: string
         type:
           description: |
@@ -889,12 +967,12 @@ components:
       type: object
       properties:
         id:
-          description: 'The `id` of an `Achievement` returned by a successful GET /achievement request'
+          description: "The `id` of an `Achievement` returned by a successful GET /achievement request"
           type: integer
           format: u32
           example: 0
         player:
-          description: 'List of unlock status of achievement for each player'
+          description: "List of unlock status of achievement for each player"
           type: array
           maxLength: 4
           minLength: 4
@@ -911,22 +989,23 @@ components:
       type: object
       properties:
         token:
-          description: 'JWT to use when authenticating subsequent requests'
+          description: "JWT to use when authenticating subsequent requests"
           type: string
     Dashlaunch:
       type: object
       properties:
         options:
-          description: 'List of Dashlaunch options'
+          description: "List of Dashlaunch options"
           type: array
           items:
             type: object
             properties:
               id:
-                description: 'Id of Dashlaunch option'
+                description: "Id of Dashlaunch option"
                 type: integer
+                format: u32
               category:
-                description: 'Category of Dashlaunch option'
+                description: "Category of Dashlaunch option"
                 type: string
                 enum:
                   - "Behavior"
@@ -936,68 +1015,86 @@ components:
                   - "Plugins"
                   - "Timer"
               name:
-                description: 'Name of Dashlaunch option'
+                description: "Name of Dashlaunch option"
                 type: string
               value:
-                description: 'Value of Dashlaunch option'
+                description: "Value of Dashlaunch option"
                 type: string
         version:
-          description: 'Dashlaunch version information'
+          description: "Dashlaunch version information"
           type: object
           properties:
             kernel:
-              description: 'Kernel version of console that Dashlaunch is built for'
+              description: "Kernel version of console that Dashlaunch is built for"
               type: integer
               example: 17599
               format: u32
             number:
-              description: 'Version number of Dashlaunch'
+              description: "Version number of Dashlaunch"
               type: object
               properties:
                 build:
-                  description: 'Build version of Dashlaunch'
+                  description: "Build version of Dashlaunch"
                   type: integer
                   format: u32
                 major:
-                  description: 'Major version of Dashlaunch'
+                  description: "Major version of Dashlaunch"
                   type: integer
                   format: u32
                 minor:
-                  description: 'Minor version of Dashlaunch'
+                  description: "Minor version of Dashlaunch"
                   type: integer
                   format: u32
+    FilebrowserEntry:
+      type: object
+      properties:
+        name:
+          description: "Name of the file"
+          type: integer
+          format: u32
+        attributes:
+          description: |
+            A value made up of bitwise flags that contains information about the file
+
+            See [https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants](https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants) for a list of flags
+          type: integer
+          format: u32
+        size:
+          description: "Size of the file in bytes. Mounts and directories are `0` bytes"
+          type: integer
+          format: u32
     Memory:
       type: object
       properties:
         free:
-          description: 'Number of unused bytes of RAM'
+          description: "Number of unused bytes of RAM"
           type: integer
           format: u32
         total:
-          description: 'Total number of bytes of RAM'
+          description: "Total number of bytes of RAM"
           type: integer
           format: u32
         used:
-          description: 'Number of used bytes of RAM'
+          description: "Number of used bytes of RAM"
           type: integer
           format: u32
     Multidisc:
       type: object
       properties:
         disc:
-          description: ''
+          description: ""
           type: object
           properties:
             current:
-              description: 'Entry index of the running title. **Note**: Entry index starts at 1.'
+              description: "Entry index of the running title. **Note**: Entry index starts at 1."
               type: integer
               format: u32
             total:
-              description: 'Number of discs that make up the running title'
+              description: "Number of discs that make up the running title"
               type: integer
               format: u32
         entries:
-          description: ''
+          description: ""
           type: array
           maxLength: 5
           minLength: 5
@@ -1009,6 +1106,7 @@ components:
                   - 0: Executable is not in container format
                   - 1: Executable is in container format
                 type: integer
+                format: u32
                 enum:
                   - 0
                   - 1
@@ -1024,7 +1122,7 @@ components:
       type: object
       properties:
         features:
-          description: ''
+          description: ""
           type: object
           properties:
             achievements:
@@ -1032,6 +1130,7 @@ components:
                 - 0: Plugin supports achievements
                 - 1: Plugin does not support achievements
               type: integer
+              format: u32
               enum:
                 - 0
                 - 1
@@ -1040,6 +1139,7 @@ components:
                 - 0: Plugin supports debugger
                 - 1: Plugin does not support debugger
               type: integer
+              format: u32
               enum:
                 - 0
                 - 1
@@ -1048,6 +1148,7 @@ components:
                 - 0: Plugin supports gamepad
                 - 1: Plugin does not support gamepad
               type: integer
+              format: u32
               enum:
                 - 0
                 - 1
@@ -1056,6 +1157,7 @@ components:
                 - 0: Plugin supports httpdaemon
                 - 1: Plugin does not support httpdaemon
               type: integer
+              format: u32
               enum:
                 - 0
                 - 1
@@ -1064,6 +1166,7 @@ components:
                 - 0: Plugin supports multidisc
                 - 1: Plugin does not support multidisc
               type: integer
+              format: u32
               enum:
                 - 0
                 - 1
@@ -1072,6 +1175,7 @@ components:
                 - 0: Plugin supports network
                 - 1: Plugin does not support network
               type: integer
+              format: u32
               enum:
                 - 0
                 - 1
@@ -1080,6 +1184,7 @@ components:
                 - 0: Plugin supports systemlink
                 - 1: Plugin does not support systemlink
               type: integer
+              format: u32
               enum:
                 - 0
                 - 1
@@ -1088,6 +1193,7 @@ components:
                 - 0: Plugin supports threads
                 - 1: Plugin does not support threads
               type: integer
+              format: u32
               enum:
                 - 0
                 - 1
@@ -1096,52 +1202,52 @@ components:
                 - 0: Plugin supports trainers
                 - 1: Plugin does not support trainers
               type: integer
+              format: u32
               enum:
                 - 0
                 - 1
         path:
-          description: ''
+          description: ""
           type: object
-          # TODO confirm number of back slashes in example paths
           properties:
             launcher:
-              description: 'Path to launcher executable'
+              description: "Path to launcher executable"
               type: string
               example: '\Device\Harddisk0\Partition1\Aurora\Aurora.xex'
             root:
-              description: 'Path to `Plugins` directory'
+              description: "Path to `Plugins` directory"
               type: string
               example: '\Device\Harddisk0\Partition1\Aurora\Plugins'
             user:
-              description: 'Path to `UserData` directory'
+              description: "Path to `UserData` directory"
               type: string
               example: '\Device\Harddisk0\Partition1\Aurora\Plugins\UserData'
             web:
-              description: 'Path to `WebRoot` directory'
+              description: "Path to `WebRoot` directory"
               type: string
               example: '\Device\Harddisk0\Partition1\Aurora\Plugins\WebRoot'
         version:
-          description: ''
+          description: ""
           type: object
           properties:
             api:
-              description: 'API version'
+              description: "API version"
               type: integer
               format: u32
             number:
-              description: 'NOVA plugin version'
+              description: "NOVA plugin version"
               type: object
               properties:
                 build:
-                  description: 'Build version of NOVA plugin'
+                  description: "Build version of NOVA plugin"
                   type: integer
                   format: u32
                 major:
-                  description: 'Major version of NOVA plugin'
+                  description: "Major version of NOVA plugin"
                   type: integer
                   format: u32
                 minor:
-                  description: 'Minor version of NOVA plugin'
+                  description: "Minor version of NOVA plugin"
                   type: integer
                   format: u32
                 type:
@@ -1154,76 +1260,80 @@ components:
                     - 1
                     - 2
                     - 3
-    Profile:
-      type: array
-      maxLength: 4
-      minLength: 4
-      items:
-        type: object
-        properties:
-          gamerscore:
-            description: Profile's gamerscore
-            type: integer
-            format: u32
-          gamertag:
-            description: Profile's gamertag
-            type: string
-          index:
-            description: |
-              - 0: Player 1
-              - 1: Player 2
-              - 2: Player 3
-              - 3: Player 4
-            type: integer
-            enum:
-              - 0
-              - 1
-              - 2
-              - 3
-          signedin:
-            description: |
-              - 0: Not signed in
-              - 1: Signed in
-            type: integer
-            enum:
-              - 0
-              - 1
-          xuid:
-            description: Profile's XUID
-            type: string
-    ### VERIFIED ABOVE
+    ProfileEntry:
+      type: object
+      properties:
+        gamerscore:
+          description: Profile's gamerscore
+          type: integer
+          format: u32
+        gamertag:
+          description: Profile's gamertag
+          type: string
+        index:
+          description: |
+            - 0: Player 1
+            - 1: Player 2
+            - 2: Player 3
+            - 3: Player 4
+          type: integer
+          format: u32
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+        signedin:
+          description: |
+            - 0: Not signed in
+            - 1: Signed in
+          type: integer
+          format: u32
+          enum:
+            - 0
+            - 1
+        xuid:
+          description: Profile's XUID
+          type: string
     ScreencaptureMeta:
       type: object
       properties:
         filename:
-          description: 'Name of the screen capture formatted as `{titleid}{timestamp}`'
+          description: "Name of the screen capture formatted as `{titleid}{timestamp}`"
           type: string
-          example: ''
+          example: "0000000019800101000000000"
         filesize:
-          description: 'Size of the screen capture in bytes'
+          description: "Size of the screen capture in bytes"
           type: integer
           format: u32
         info:
           type: object
           properties:
             format:
-              description: 'Format of the screen capture'
+              description: "Format of the screen capture"
               type: string
-              example: 'A8R8G8B8'
+              example: "A8R8G8B8"
             height:
-              description: 'Height of the screen capture in pixels'
+              description: "Height of the screen capture in pixels"
               type: integer
               format: u32
             width:
-              description: 'Width of the screen capture in pixels'
+              description: "Width of the screen capture in pixels"
               type: integer
               format: u32
         timestamp:
-          description: 'UTC timestamp of when the screen capture was taken formatted as `YYYYmmddHHMMSSsss`'
+          description: "UTC timestamp of when the screen capture was taken formatted as `YYYYmmddHHMMSSsss`"
           type: string
         titleid:
           description: Hexidecimal string of the title's `titleid`
           type: string
+    ScreencaptureMetaListCount:
+      type: object
+      properties:
+        total:
+          description: "Number of screen captures available for currently running title"
+          type: integer
+          format: u32
     Smc:
       type: object
       properties:
@@ -1274,9 +1384,9 @@ components:
             - 9
             - 10
         smcversion:
-          description: 'Version of SMC'
+          description: "Version of SMC"
           type: string
-          example: '3.1'
+          example: "3.1"
         temperature:
           type: object
           properties:
@@ -1289,35 +1399,36 @@ components:
               type: object
               properties:
                 cpu:
-                  description: 'Shutdown if CPU temperature reaches this value'
+                  description: "Shutdown if CPU temperature reaches this value"
                   type: number
                   format: f32
                 gpu:
-                  description: 'Shutdown if GPU temperature reaches this value'
+                  description: "Shutdown if GPU temperature reaches this value"
                   type: number
                   format: f32
                 memory:
-                  description: 'Shutdown if RAM temperature reaches this value'
+                  description: "Shutdown if RAM temperature reaches this value"
                   type: number
                   format: f32
             target:
               type: object
               properties:
                 cpu:
-                  description: 'Fans will attempt to maintain this temperature for the CPU'
+                  description: "Fans will attempt to maintain this temperature for the CPU"
                   type: number
                   format: f32
                 gpu:
-                  description: 'Fans will attempt to maintain this temperature for the GPU'
+                  description: "Fans will attempt to maintain this temperature for the GPU"
                   type: number
                   format: f32
                 memory:
-                  description: 'Fans will attempt to maintain this temperature for the RAM'
+                  description: "Fans will attempt to maintain this temperature for the RAM"
                   type: number
+                  format: f32
         tiltstate:
           description: |
-            - 0: Horizontal
-            - 1: Vertical
+            - 0: Vertical
+            - 1: Horizontal
           type: integer
           format: u32
           enum:
@@ -1347,22 +1458,22 @@ components:
           type: object
           properties:
             motherboard:
-              description: ''
+              description: ""
               type: string
               enum:
-                - 'Xenon'
-                - 'Zephyr'
-                - 'Opus'
-                - 'Falcon'
-                - 'Jasper'
-                - 'Trinity'
-                - 'Corona'
+                - "Xenon"
+                - "Zephyr"
+                - "Opus"
+                - "Falcon"
+                - "Jasper"
+                - "Trinity"
+                - "Corona"
             type:
-              description: ''
+              description: ""
               type: string
               enum:
-                - 'Devkit'
-                - 'Retail'
+                - "Devkit"
+                - "Retail"
         consoleid:
           description: Console's product id
           type: string
@@ -1398,14 +1509,14 @@ components:
       type: object
       properties:
         apikey:
-          description: 'Unity API key'
+          description: "Unity API key"
           type: string
         broadcastport:
-          description: 'Broadcast port used by LiNK'
+          description: "Broadcast port used by LiNK"
           type: integer
           format: u32
         dataport:
-          description: 'Data port used by LiNK'
+          description: "Data port used by LiNK"
           type: integer
           format: u32
         enabled:
@@ -1424,7 +1535,7 @@ components:
           description: Router's MAC address
           type: string
         username:
-          description: 'Unity username'
+          description: "Unity username"
           type: string
         xboxip:
           description: Console's IP address
@@ -1439,29 +1550,29 @@ components:
           type: object
           properties:
             downstream:
-              description: 'Number of bytes that LiNK has downloaded'
+              description: "Number of bytes that LiNK has downloaded"
               type: integer
               format: u32
             upstream:
-              description: 'Number of bytes that LiNK has uploaded'
+              description: "Number of bytes that LiNK has uploaded"
               type: integer
               format: u32
         rate:
           type: object
           properties:
             downstream:
-              description: 'Current download speed'
+              description: "Current download speed"
               type: number
               format: f32
             upstream:
-              description: 'Current upload speed'
+              description: "Current upload speed"
               type: number
               format: f32
     Temperature:
       type: object
       properties:
         case:
-          description: 'Temperature of the case'
+          description: "Temperature of the case"
           type: number
           format: f32
         celsius:
@@ -1470,39 +1581,39 @@ components:
             - false: Unit of temperature values is Fahrenheit
           type: boolean
         cpu:
-          description: 'Temperature of the CPU'
+          description: "Temperature of the CPU"
           type: number
           format: f32
         gpu:
-          description: 'Temperature of the GPU'
+          description: "Temperature of the GPU"
           type: number
           format: f32
         memory:
-          description: 'Temperature of the RAM'
+          description: "Temperature of the RAM"
           type: number
           format: f32
     Thread:
       type: object
       properties:
         address:
-          description: ''
+          description: ""
           type: string
         flags:
-          description: ''
+          description: ""
           type: string
         id:
-          description: ''
+          description: ""
           type: string
         priority:
-          description: ''
+          description: ""
           type: integer
           format: u32
         state:
-          description: ''
+          description: ""
           type: integer
           format: u32
         type:
-          description: ''
+          description: ""
           type: integer
           format: u32
     ThreadState:
@@ -1524,11 +1635,11 @@ components:
           type: object
           properties:
             count:
-              description: 'Number of discs tha tmake up the running title'
+              description: "Number of discs tha tmake up the running title"
               type: integer
               format: u32
             current:
-              description: 'Entry index of the running title. Corresponds to `disc.current` property of a `Multidisc`'
+              description: "Entry index of the running title. Corresponds to `disc.current` property of a `Multidisc`"
               type: integer
               format: u32
         mediaid:
@@ -1542,28 +1653,28 @@ components:
           type: object
           properties:
             height:
-              description: 'Height of video output in pixels'
+              description: "Height of video output in pixels"
               type: integer
               format: u32
             width:
-              description: 'Width of video output in pixels'
+              description: "Width of video output in pixels"
               type: integer
               format: u32
         titleid:
           description: Hexidecimal string of the running title's title id
           type: string
         tuver:
-          description: 'Title update version'
+          description: "Title update version"
           type: integer
           format: u32
         version:
           type: object
           properties:
             base:
-              description: ''
+              description: ""
               type: string
             current:
-              description: ''
+              description: ""
               type: string
     UpdateNotification:
       type: object
@@ -1581,11 +1692,11 @@ components:
           type: integer
           format: u32
         screencapture:
-          description: 'Number of screen captures taken during the current session'
+          description: "Number of screen captures taken during the current session"
           type: integer
           format: u32
         title:
-          description: 'Number of titles launched during the current session'
+          description: "Number of titles launched during the current session"
           type: integer
           format: u32
     UnauthorizedResponse:
