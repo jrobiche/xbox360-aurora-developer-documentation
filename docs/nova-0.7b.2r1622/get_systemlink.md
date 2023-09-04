@@ -1,51 +1,36 @@
 # GET /systemlink
 
-Contains information about System Link configuration.
-
-**Auth Required**: Yes
+Get information about LiNK configuration.
 
 ## Headers
 
-| Name          | Value        | Description                                                                                                                              |
-| ------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Authorization | Bearer {JWT} | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
+| Name          | Value                       | Description                                                                                                                              |
+| ------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Accept        | application/json, text/html | Client should expect the response body content to be in either JSON or HTML format.                                                      |
+| Authorization | Bearer {JWT}                | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
 
 ## Example Request
 
 ```
-curl --request GET --header "Authorization: Bearer ${JWT}" "http://${XBOX_IP}:9999/systemlink"
+curl \
+    --request GET \
+    --header "Accept: application/json, text/html" \
+    --header "Authorization: Bearer ${JWT}" \
+    "http://${XBOX_IP}:9999/systemlink"
 ```
 
-## Success Response
+## Responses
 
-**Code** `200 OK`
+### Code `200`
 
-**Content Example**
+Description: Operation was successful.
 
-```json
-{
-  "apikey": "",
-  "broadcastport": 3072,
-  "dataport": 3071,
-  "enabled": 1,
-  "gatewayip": "192.168.1.1",
-  "gatewaymac": "00:00:00:00:00:00",
-  "username": "",
-  "xboxip": "192.168.1.123",
-  "xboxmac": "00:00:00:00:00:00"
-}
-```
+Media type: `application/json`
 
-**Content Definitions**
+Content Type: `Systemlink` (See [Systemlink Schema](./schema_systemlink.md))
 
-| Key           | Data Type | Description                                                 |
-| ------------- | --------- | ----------------------------------------------------------- |
-| apikey        | String    | Unity API Key.                                              |
-| broadcastport | Integer   | Broadcast port used by SystemLink.                          |
-| dataport      | Integer   | Data port used by SystemLink.                               |
-| enabled       | Integer   | 0: SystemLink is not enabled.<br/>1: SystemLink is enabled. |
-| gatewayip     | String    | IP address of modem.                                        |
-| gatewaymac    | String    | MAC address of modem.                                       |
-| username      | String    | Unity username.                                             |
-| xboxip        | String    | IP address of console.                                      |
-| xboxmac       | String    | MAC address of console.                                     |
+## Code `401`
+
+Description: Unauthorized
+
+Response Type: [UnauthorizedResponse](./schema_unauthorized_response.md)

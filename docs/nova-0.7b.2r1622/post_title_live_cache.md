@@ -1,31 +1,47 @@
 # POST /title/live/cache
 
-Set xbox live catalog information for running title.
-
-**Auth Required**: Yes
+Set xbox live catalog information for the running title.
 
 ## Headers
 
-| Name          | Value        | Description                                                                                                                              |
-| ------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Authorization | Bearer {JWT} | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
+| Name          | Value               | Description                                                                                                                              |
+| ------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Accept        | text/html           | Client should expect the response body content to be in HTML format.                                                                     |
+| Authorization | Bearer {JWT}        | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
+| Content-Type  | multipart/form-data | POST data will be passed as a multipart form.                                                                                            |
 
-## Parameters
+## Form Data
 
-**Query String Parameters**
-
-| Parameter | Required/Optional | Data Type          | Description                                                                                                           |
-| --------- | ----------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------- |
-| liveinfo  | Required          | URL Encoded String | Stringified JSON object. See Success Response of [GET /title/live/cache](./get_title_live_cache.md) for example JSON. |
+| Field    | Required/Optional | Data Type | Description |
+| -------- | ----------------- | --------- | ----------- |
+| liveinfo | Required          | string    |             |
 
 ## Example Request
 
 Set running title's live cache to `{"fulltitle": "Example Full Title", "description": "Example Description"}`
 
 ```
-curl --request POST --header "Authorization: Bearer ${JWT}" --data 'liveinfo=%7B%22fulltitle%22%3A%22Example%20Full%20Title%22%2C%22description%22%3A%22Example%20Description%22%7D' "http://${XBOX_IP}:9999/title/live/cache"
+curl \
+    --request POST \
+    --header "Accept: application/json, text/html" \
+    --header "Authorization: Bearer ${JWT}" \
+    --header "Content-Type: multipart/form-data" \
+    --form 'liveinfo={"fulltitle": "Example Full Title", "description": "Example Description"}' \
+    "http://${XBOX_IP}:9999/title/live/cache"
 ```
 
 ## Success Response
 
 **Code** `201 Created`
+
+## Responses
+
+### Code `202`
+
+Description: Created live cache for title
+
+## Code `401`
+
+Description: Unauthorized
+
+Response Type: [UnauthorizedResponse](./schema_unauthorized_response.md)

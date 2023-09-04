@@ -1,47 +1,36 @@
 # GET /thread
 
-Contains information about threads.
-
-**Auth Required**: Yes
+Get information about threads.
 
 ## Headers
 
-| Name          | Value        | Description                                                                                                                              |
-| ------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Authorization | Bearer {JWT} | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
+| Name          | Value                       | Description                                                                                                                              |
+| ------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Accept        | application/json, text/html | Client should expect the response body content to be in either JSON or HTML format.                                                      |
+| Authorization | Bearer {JWT}                | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
 
 ## Example Request
 
 ```
-curl --request GET --header "Authorization: Bearer ${JWT}" "http://${XBOX_IP}:9999/thread"
+curl \
+    --request GET \
+    --header "Accept: application/json, text/html" \
+    --header "Authorization: Bearer ${JWT}" \
+    "http://${XBOX_IP}:9999/thread"
 ```
 
-## Success Response
+## Responses
 
-**Code** `200 OK`
+### Code `200`
 
-**Content Example**
+Description: Operation was successful.
 
-```json
-[
-  {
-    "address": "0x80000000",
-    "flags": "0x00000000",
-    "id": "0xF0000000",
-    "priority": 11,
-    "state": 1,
-    "type": 1
-  }
-]
-```
+Media type: `application/json`
 
-**Content Definitions**
+Content Type: `Thread[]` (See [Thread Schema](./schema_thread.md))
 
-| Key      | Data Type | Description |
-| -------- | --------- | ----------- |
-| address  | String    |             |
-| flags    | String    |             |
-| id       | String    |             |
-| priority | Integer   |             |
-| state    | Integer   |             |
-| type     | Integer   |             |
+## Code `401`
+
+Description: Unauthorized
+
+Response Type: [UnauthorizedResponse](./schema_unauthorized_response.md)

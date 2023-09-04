@@ -1,40 +1,36 @@
 # GET /memory
 
-Contains the free, used, and total bytes of RAM.
-
-**Auth Required**: Yes
+Get the free, used, and total bytes of RAM.
 
 ## Headers
 
-| Name          | Value        | Description                                                                                                                              |
-| ------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Authorization | Bearer {JWT} | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
+| Name          | Value                       | Description                                                                                                                              |
+| ------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Accept        | application/json, text/html | Client should expect the response body content to be in either JSON or HTML format.                                                      |
+| Authorization | Bearer {JWT}                | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
 
 ## Example Request
 
 ```
-curl --request GET --header "Authorization: Bearer ${JWT}" "http://${XBOX_IP}:9999/memory"
+curl \
+    --request GET \
+    --header "Accept: application/json, text/html" \
+    --header "Authorization: Bearer ${JWT}" \
+    "http://${XBOX_IP}:9999/memory"
 ```
 
-## Success Response
+## Responses
 
-**Code** `200 OK`
+### Code `200`
 
-**Content Example**
+Description: Operation was successful.
 
-<!-- prettier-ignore -->
-```json
-{
-  "free": 423395328,
-  "total": 536870912,
-  "used": 113475584
-}
-```
+Media type: `application/json`
 
-**Content Definitions**
+Content Type: `Memory` (See [Memory Schema](./schema_memory.md))
 
-| Key   | Data Type | Description                        |
-| ----- | --------- | ---------------------------------- |
-| free  | Integer   | The number of unused bytes of RAM. |
-| total | Integer   | The total number of bytes of RAM.  |
-| used  | Integer   | The number of used bytes of RAM.   |
+## Code `401`
+
+Description: Unauthorized
+
+Response Type: [UnauthorizedResponse](./schema_unauthorized_response.md)

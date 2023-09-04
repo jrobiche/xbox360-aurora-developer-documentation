@@ -2,76 +2,44 @@
 
 Request a JWT for use when authenticating subsequent requests.
 
-## Parameters
+## Headers
 
-**Query String Parameters**
+| Name         | Value                       | Description                                                                         |
+| ------------ | --------------------------- | ----------------------------------------------------------------------------------- |
+| Accept       | application/json, text/html | Client should expect the response body content to be in either JSON or HTML format. |
+| Content-Type | multipart/form-data         | POST data will be passed as a multipart form.                                       |
 
-| Parameter | Required/Optional | Data Type          | Description                                  |
-| --------- | ----------------- | ------------------ | -------------------------------------------- |
-| username  | Required          | URL Encoded String | Username for user authenticating with WebUI. |
-| password  | Required          | URL Encoded String | Password for user authenticating with WebUI. |
+## Form Data
+
+| Field    | Required/Optional | Data Type | Description                                  |
+| -------- | ----------------- | --------- | -------------------------------------------- |
+| username | Required          | string    | Username for user authenticating with WebUI. |
+| password | Required          | string    | Password for user authenticating with WebUI. |
 
 ## Example Request
 
 ```
-curl --request POST --data 'username=xboxhttp&password=xboxhttp' "http://${XBOX_IP}:9999/authenticate"
+curl \
+    --request POST \
+    --header "Accept: application/json, text/html" \
+    --header "Content-Type: multipart/form-data" \
+    --form "username=xboxhttp" \
+    --form "password=xboxhttp" \
+    "http://${XBOX_IP}:9999/authenticate"
 ```
 
-## Success Response
+## Responses
 
-**Code** `200 OK`
+### Code `200`
 
-**Content Example**
+Description: Operation was successful.
 
-```json
-{
-  "token": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy.zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
-}
-```
+Media type: `application/json`
 
-**Content Definitions**
+Content Type: `Authentication` (See [Authentication Schema](./schema_authentication.md))
 
-| Key   | Data Type | Description                                            |
-| ----- | --------- | ------------------------------------------------------ |
-| token | String    | A JWT containing the header and payload defined below. |
+## Code `401`
 
-**JWT Header**
+Description: Unauthorized
 
-```json
-{
-  "alg": "HS256",
-  "typ": "JWT"
-}
-```
-
-**JWT Payload**
-
-```json
-{
-    "exp": {expiration-timestamp},
-    "ita": {issued-at-timestamp},
-    "iss": "phoenix",
-    "user": "{username}"
-}
-```
-
-_Note: The key for "issued at timestamp" is `ita` instead of `iat`_
-
-## Error Response
-
-**Condition** If the `username` or `password` is incorrect.
-
-**Code** `401 Unauthorized`
-
-**Content**
-
-```html
-<html>
-  <head>
-    <title>Nova</title>
-  </head>
-  <body>
-    <h1>Unauthorized</h1>
-  </body>
-</html>
-```
+Response Type: [UnauthorizedResponse](./schema_unauthorized_response.md)
