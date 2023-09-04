@@ -1,51 +1,40 @@
 # GET /achievement/player
 
-Contains information about each player's unlock status of each achievement for the running title.
-
-**Auth Required**: Yes
+Get information about each player's unlock status for each achievement of the running title.
 
 ## Headers
 
-| Name          | Value        | Description                                                                                                                              |
-| ------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Authorization | Bearer {JWT} | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
+| Name          | Value                       | Description                                                                                                                              |
+| ------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Accept        | application/json, text/html | Client should expect the response body content to be in either JSON or HTML format.                                                      |
+| Authorization | Bearer {JWT}                | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
 
 ## Example Request
 
 ```
-curl --request GET --header "Authorization: Bearer ${JWT}" "http://${XBOX_IP}:9999/achievement/player"
+curl \
+    --request GET \
+    --header "Accept: application/json, text/html" \
+    --header "Authorization: Bearer ${JWT}" \
+    "http://${XBOX_IP}:9999/achievement/player"
 ```
 
-## Success Response
+## Responses
 
-**Code** `200 OK`
+### Code `200`
 
-**Content Example**
+Description: Operation was successful.
 
-<!-- prettier-ignore -->
-```json
-[
-  {
-    "id": 1,
-    "player": [
-      0,
-      0,
-      0,
-      0
-    ]
-  }
-]
-```
+Media type: `application/json`
 
-**Content Definitions**
+Content Type: `AchievementPlayer[]` (A list of [AchievementPlayer](./schema_achievement_player.md)'s)
 
-| Key                  | Data Type | Description                                                                                                    |
-| -------------------- | --------- | -------------------------------------------------------------------------------------------------------------- |
-| id                   | Integer   | Corresponds to `id` of an achievement returned by a successful [GET /achievement](get_achievement.md) request. |
-| player/{playerIndex} | Integer   | 0: Player has unlocked the achievement.<br/>1: Player has not unlocked the achievement.                        |
+### Code `204`
 
-## Error Response
+Description: Running title does not have any achievements.
 
-Returned if the running title does not have any achievements.
+### Code `401`
 
-**Code** `204 No Content`
+Description: Unauthorized
+
+Response Type: [UnauthorizedResponse](./schema_unauthorized_response.md)

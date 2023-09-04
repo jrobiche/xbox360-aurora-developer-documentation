@@ -1,46 +1,36 @@
 # GET /systemlink/bandwidth
 
-Contains network usage for SystemLink.
-
-**Auth Required**: Yes
+Get information about LiNK network usage.
 
 ## Headers
 
-| Name          | Value        | Description                                                                                                                              |
-| ------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Authorization | Bearer {JWT} | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
+| Name          | Value                       | Description                                                                                                                              |
+| ------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Accept        | application/json, text/html | Client should expect the response body content to be in either JSON or HTML format.                                                      |
+| Authorization | Bearer {JWT}                | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
 
 ## Example Request
 
 ```
-curl --request GET --header "Authorization: Bearer ${JWT}" "http://${XBOX_IP}:9999/systemlink/bandwidth"
+curl \
+    --request GET \
+    --header "Accept: application/json, text/html" \
+    --header "Authorization: Bearer ${JWT}" \
+    "http://${XBOX_IP}:9999/systemlink/bandwidth"
 ```
 
-## Success Response
+## Responses
 
-**Code** `200 OK`
+### Code `200`
 
-**Content Example**
+Description: Operation was successful.
 
-<!-- prettier-ignore -->
-```json
-{
-  "bytes": {
-    "downstream": 0,
-    "upstream": 0
-  },
-  "rate": {
-    "downstream": 0.000000,
-    "upstream": 0.000000
-  }
-}
-```
+Media type: `application/json`
 
-**Content Definitions**
+Content Type: `SystemlinkBandwidth` (See [SystemlinkBandwidth Schema](./schema_systemlink_bandwidth.md))
 
-| Key              | Data Type | Description                                     |
-| ---------------- | --------- | ----------------------------------------------- |
-| bytes/downstream | Integer   | Number of bytes that SystemLink has downloaded. |
-| bytes/upstream   | Integer   | Number of bytes that SystemLink has uploaded.   |
-| rate/downstream  | Float     | Current download speed.                         |
-| rate/upstream    | Float     | Current upload speed.                           |
+## Code `401`
+
+Description: Unauthorized
+
+Response Type: [UnauthorizedResponse](./schema_unauthorized_response.md)

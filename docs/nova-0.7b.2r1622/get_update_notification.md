@@ -1,42 +1,36 @@
 # GET /update/notification
 
-Contains information about changes in achievements, profiles, screenshots, and titles.
-
-**Auth Required**: Yes
+Get information about changes in achievements, profiles, screen captures, and titles.
 
 ## Headers
 
-| Name          | Value        | Description                                                                                                                              |
-| ------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Authorization | Bearer {JWT} | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
+| Name          | Value                       | Description                                                                                                                              |
+| ------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Accept        | application/json, text/html | Client should expect the response body content to be in either JSON or HTML format.                                                      |
+| Authorization | Bearer {JWT}                | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
 
 ## Example Request
 
 ```
-curl --request GET --header "Authorization: Bearer ${JWT}" "http://${XBOX_IP}:9999/update/notification"
+curl \
+    --request GET \
+    --header "Accept: application/json, text/html" \
+    --header "Authorization: Bearer ${JWT}" \
+    "http://${XBOX_IP}:9999/update/notification"
 ```
 
-## Success Response
+## Responses
 
-**Code** `200 OK`
+### Code `200`
 
-**Content Example**
+Description: Operation was successful.
 
-<!-- prettier-ignore -->
-```json
-{
-  "achievements": 8,
-  "profiles": 11,
-  "screencapture": 14,
-  "title": 11
-}
-```
+Media type: `application/json`
 
-**Content Definitions**
+Content Type: `UpdateNotification` (See [UpdateNotification Schema](./schema_update_notification.md))
 
-| Key           | Data Type | Description                                                                                                                                                                |
-| ------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| achievements  | Integer   | Number of titles launched during the current session that contain achievements.<br/>Note: Value increments by 2 each time a new title containing achievements is launched. |
-| profiles      | Integer   | Number of times profiles have been signed into or out of during the current session.<br/>Note: Value also increments when a new title is launched.                         |
-| screencapture | Integer   | Number of screenshots taken during the current session.                                                                                                                    |
-| title         | Integer   | Number of titles launched during the current session.                                                                                                                      |
+## Code `401`
+
+Description: Unauthorized
+
+Response Type: [UnauthorizedResponse](./schema_unauthorized_response.md)

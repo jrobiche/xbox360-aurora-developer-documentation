@@ -1,66 +1,36 @@
 # GET /mutidisc
 
-Contains information about the different discs that make up the running title.
-
-**Auth Required**: Yes
+Get information about the different discs that make up the running title.
 
 ## Headers
 
-| Name          | Value        | Description                                                                                                                              |
-| ------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Authorization | Bearer {JWT} | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
+| Name          | Value                       | Description                                                                                                                              |
+| ------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Accept        | application/json, text/html | Client should expect the response body content to be in either JSON or HTML format.                                                      |
+| Authorization | Bearer {JWT}                | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
 
-## Success Response
+## Example Request
 
-**Code** `200 OK`
-
-**Content Example**
-
-<!-- prettier-ignore -->
-```json
-{
-  "disc": {
-    "current": 2,
-    "total": 2
-  },
-  "entries": [
-    {
-      "container": 1,
-      "path": "\\Device\\Harddisk0\\Partition1\\content\\0000000000000000\\ffffffff\\00007000\\00000000000000000000"
-    },
-    {
-      "container": 1,
-      "path": "\\Device\\Harddisk0\\Partition1\\content\\0000000000000000\\ffffffff\\00007000\\ffffffffffffffffffff"
-    },
-    {
-      "container": 0,
-      "path": ""
-    },
-    {
-      "container": 0,
-      "path": ""
-    },
-    {
-      "container": 0,
-      "path": ""
-    }
-  ],
-  "titleid": "0xFFFFFFFF"
-}
+```
+curl \
+    --request GET \
+    --header "Accept: application/json, text/html" \
+    --header "Authorization: Bearer ${JWT}" \
+    "http://${XBOX_IP}:9999/multidisc"
 ```
 
-**Content Definitions**
+## Responses
 
-| Key                            | Data Type | Description                                                                         |
-| ------------------------------ | --------- | ----------------------------------------------------------------------------------- |
-| disc/current                   | Integer   | Entry index of the running title. Note: Entry index starts at 1.                    |
-| disc/total                     | Integer   | Number of discs that make up the running title.                                     |
-| entries/{entryIndex}/container | Integer   | 0: Executable is not in container format.<br/>1: Executable is in container format. |
-| entries/{entryIndex}/path      | String    | Path to running title's executable.                                                 |
-| titleid                        | String    | Hexidecimal string of running title's Title Id.                                     |
+### Code `200`
 
-## Error Response
+Description: Operation was successful.
 
-Returned if the running title is not a multidisc title.
+Media type: `application/json`
 
-**Code** `204 No Content`
+Content Type: `Multidisc` (See [Multidisc Schema](./schema_multidisc.md))
+
+## Code `401`
+
+Description: Unauthorized
+
+Response Type: [UnauthorizedResponse](./schema_unauthorized_response.md)

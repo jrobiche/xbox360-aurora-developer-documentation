@@ -1,44 +1,36 @@
 # GET /temperature
 
-Contains the current temperatures of CPU, GPU, RAM, and case.
-
-**Auth Required**: Yes
+Get the current temperature of the CPU, GPU, RAM, and case.
 
 ## Headers
 
-| Name          | Value        | Description                                                                                                                              |
-| ------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Authorization | Bearer {JWT} | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
+| Name          | Value                       | Description                                                                                                                              |
+| ------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Accept        | application/json, text/html | Client should expect the response body content to be in either JSON or HTML format.                                                      |
+| Authorization | Bearer {JWT}                | Authorization header that includes a valid JWT supplied in a success response to a [POST /authenticate](./post_authenticate.md) request. |
 
 ## Example Request
 
 ```
-curl --request GET --header "Authorization: Bearer ${JWT}" "http://${XBOX_IP}:9999/temperature"
+curl \
+    --request GET \
+    --header "Accept: application/json, text/html" \
+    --header "Authorization: Bearer ${JWT}" \
+    "http://${XBOX_IP}:9999/temperature"
 ```
 
-## Success Response
+## Responses
 
-**Code** `200 OK`
+### Code `200`
 
-**Content Example**
+Description: Operation was successful.
 
-<!-- prettier-ignore -->
-```json
-{
-  "case": 0.00,
-  "celsius": true,
-  "cpu": 0.00,
-  "gpu": 0.00,
-  "memory": 0.00
-}
-```
+Media type: `application/json`
 
-**Content Definitions**
+Content Type: `Temperature` (See [Temperature Schema](./schema_temperature.md))
 
-| Key     | Data Type | Description                                                                                       |
-| ------- | --------- | ------------------------------------------------------------------------------------------------- |
-| case    | Float     | Temperature of the case.                                                                          |
-| celsius | Boolean   | true: Unit of temperature values is Celsius.<br/>false: Unit of temperature values is Fahrenheit. |
-| cpu     | Float     | Temperature of the CPU.                                                                           |
-| gpu     | Float     | Temperature of the GPU.                                                                           |
-| memory  | Float     | Temperature of the RAM.                                                                           |
+## Code `401`
+
+Description: Unauthorized
+
+Response Type: [UnauthorizedResponse](./schema_unauthorized_response.md)
