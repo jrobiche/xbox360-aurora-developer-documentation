@@ -1,5 +1,35 @@
 # Aurora 0.7b.2 r1655 Assets Documentation
 
+## Table of Contents
+
+- [Description](#description)
+- [File Locations](#file-locations)
+- [File Format](#file-format)
+  - [Structures](#structures)
+    - [Asset](#asset)
+    - [AssetHeader](#assetheader)
+    - [AssetPackEntry](#assetpackentry)
+    - [AssetPackTextureHeader](#assetpacktextureheader)
+    - [GPUTextureFetch](#gputexturefetch)
+      - [GPUTextureFetch Constant2 DataType Table](#gputexturefetch-constant2-datatype-table)
+    - [GPUTextureFetchConstant0](#gputexturefetchconstant0)
+    - [GPUTextureFetchConstant1](#gputexturefetchconstant1)
+    - [GPUTextureSize1D](#gputexturesize1d)
+    - [GPUTextureSize2D](#gputexturesize2d)
+    - [GPUTextureSize3D](#gputexturesize3d)
+    - [GPUTextureSizeCube](#gputexturesizecube)
+    - [GPUTextureSizeStack](#gputexturesizestack)
+    - [GPUTextureFetchConstant3](#gputexturefetchconstant3)
+      - [Example Swizzle Function](#example-swizzle-function)
+    - [GPUTextureFetchConstant4](#gputexturefetchconstant4)
+    - [GPUTextureFetchConstant5](#gputexturefetchconstant5)
+  - [Enums](#enums)
+    - [AssetType Values](#assettype-values)
+    - [TextureEndian Values](#textureendian-values)
+    - [TextureFormat Values](#textureformat-values)
+
+## Description
+
 An asset is a file that supports up to 25 images within a single file: 1 icon, 1 banner, 1 boxart, 1 slot, 1 background, and 20 screenshots.
 
 ## File Locations
@@ -42,7 +72,9 @@ Within each `{AuroraRoot}/Data/GameData/{TitleId}_{ContentId}` directory, there 
       &Names=MediaTypes&Values=46
 
 - `GameCoverInfo.bin` - JSON list of coverart available on XboxUnity
+
   Example content:
+
   _This example has been formated for readability, actual content may be a single line_
 
   ```json
@@ -119,55 +151,57 @@ Within each `{AuroraRoot}/Data/GameData/{TitleId}_{ContentId}` directory, there 
 
 #### Asset
 
-| Name      | Offset | Length     | Data Type                   | Value      | Description                                    |
-| --------- | ------ | ---------- | --------------------------- | ---------- | ---------------------------------------------- |
-| header    | 0x0    | 2048       | [AssetHeader](#assetheader) | _variable_ | Information for interpreting `Asset.imageData` |
-| imageData | 0x800  | _variable_ | byte[]                      | _variable_ | RGBA data for images in asset                  |
+| Name      | Offset | Length     | Data Type                   | Value      | Description                                                                       |
+| --------- | ------ | ---------- | --------------------------- | ---------- | --------------------------------------------------------------------------------- |
+| header    | 0x0    | 2048       | [AssetHeader](#assetheader) | _variable_ | Information for interpreting `Asset.imageData`                                    |
+| imageData | 0x800  | _variable_ | byte[]                      | _variable_ | Data for images in asset<br/><br/>Images produced with this data may have padding |
 
 #### AssetHeader
 
-| Name            | Offset | Length | Data Type                             | Value                 | Description                                                                                                                                            |
-| --------------- | ------ | ------ | ------------------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| magic           | 0x0    | 4      | char[4]<br/>uint32                    | 'RXEA'<br/>0x52584541 | Magic bytes                                                                                                                                            |
-| version         | 0x4    | 4      | uint32                                | 1                     |                                                                                                                                                        |
-| imageDataLength | 0x8    | 4      | uint32                                | _variable_            | Length of `Asset.imageData`<br/><br/>This value should equal the number of bytes in the file minus 2048 (the length of an [AssetHeader](#assetheader)) |
-| assetTypesFlag  | 0xC    | 4      | uint32                                | _variable_            | A bitwise flag containing the [AssetType](#assettype-values)'s of images in this asset                                                                 |
-| screenshotCount | 0x10   | 4      | uint32                                | _variable_            | Number of images in this asset that are screenshots                                                                                                    |
-| assetPacks      | 0x14   | 1600   | [AssetPackEntry](#assetpackentry)[25] | _variable_            | Array of 25 [AssetPackEntry](#assetpackentry)'s                                                                                                        |
-| padding         | 0x654  | 428    | byte[]                                | 0                     | Zero padding so that the offset of `Asset.imageData`will be a multiple of 2048                                                                         |
+| Name            | Offset | Length | Data Type                             | Value                 | Description                                                                                                                                         |
+| --------------- | ------ | ------ | ------------------------------------- | --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| magic           | 0x0    | 4      | char[4]<br/>uint32                    | 'RXEA'<br/>0x52584541 | Magic bytes                                                                                                                                         |
+| version         | 0x4    | 4      | uint32                                | 1                     |                                                                                                                                                     |
+| imageDataLength | 0x8    | 4      | uint32                                | _variable_            | Length of `Asset.imageData`<br/><br/>This value should equal the sum of `Asset.assetPacks[x].imageDataLength` for all entries in `Asset.assetPacks` |
+| assetTypesFlag  | 0xC    | 4      | uint32                                | _variable_            | A bitwise flag containing the [AssetType](#assettype-values)'s of images in this asset                                                              |
+| screenshotCount | 0x10   | 4      | uint32                                | _variable_            | Number of images in this asset that are screenshots, i.e. the image's [AssetType](#assettype-values) is `AssetType.SCREENSHOTXX`                    |
+| assetPacks      | 0x14   | 1600   | [AssetPackEntry](#assetpackentry)[25] | _variable_            | Array of 25 [AssetPackEntry](#assetpackentry)'s                                                                                                     |
+| padding         | 0x654  | 428    | byte[]                                | 0                     | Zero padding so that the offset of `Asset.imageData` will be a multiple of 2048                                                                     |
 
 #### AssetPackEntry
 
 | Name            | Offset                             | Length | Data Type                                         | Value      | Description                                                                                                                                                                                           |
 | --------------- | ---------------------------------- | ------ | ------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | imageDataIndex  | assetPackEntryIndex \* 0x40 + 0x14 | 4      | uint32                                            | _variable_ | The index of `Asset.imageData` where the texture's image data begins<br/><br/>The offset for this texture's image data will equal this value plus 2048 (the length of an [AssetHeader](#assetheader)) |
-| imageDataLength | assetPackEntryIndex \* 0x40 + 0x18 | 4      | uint32                                            | _variable_ | Length of the texture's image data                                                                                                                                                                    |
+| imageDataLength | assetPackEntryIndex \* 0x40 + 0x18 | 4      | uint32                                            | _variable_ | The number of bytes of `Asset.imageData` that belong to this texture's image                                                                                                                          |
 | extendedInfo    | assetPackEntryIndex \* 0x40 + 0x1C | 4      | uint32                                            | _variable_ | Value is either 0 or pointer to random memory address<br/><br/>When reading an asset file, this value can be ignored<br/><br/>When creating an asset file, this value can be 0                        |
-| textureHeader   | assetPackEntryIndex \* 0x40 + 0x20 | 52     | [AssetPackTextureHeader](#assetpacktextureheader) | _variable_ |                                                                                                                                                                                                       |
+| textureHeader   | assetPackEntryIndex \* 0x40 + 0x20 | 52     | [AssetPackTextureHeader](#assetpacktextureheader) | _variable_ | Information about how to encode/decode the bytes in `Asset.imageData` that make up this asset's texture                                                                                               |
 
 #### AssetPackTextureHeader
 
-| Name            | Offset                             | Length | DataType                            | Value      | Description |
-| --------------- | ---------------------------------- | ------ | ----------------------------------- | ---------- | ----------- |
-| common          | assetPackEntryIndex \* 0x40 + 0x20 | 4      | uint32                              | 3          |             |
-| referenceCount  | assetPackEntryIndex \* 0x40 + 0x24 | 4      | uint32                              | 0          |             |
-| fence           | assetPackEntryIndex \* 0x40 + 0x28 | 4      | uint32                              | 0          |             |
-| readFence       | assetPackEntryIndex \* 0x40 + 0x2C | 4      | uint32                              | 0          |             |
-| identifier      | assetPackEntryIndex \* 0x40 + 0x30 | 4      | uint32                              | 0          |             |
-| baseFlush       | assetPackEntryIndex \* 0x40 + 0x34 | 4      | uint32                              | 0xFFFF0000 |             |
-| mipFlush        | assetPackEntryIndex \* 0x40 + 0x38 | 4      | uint32                              | 0xFFFF0000 |             |
-| gpuTextureFetch | assetPackEntryIndex \* 0x40 + 0x3C | 24     | [GPUTextureFetch](#gputexturefetch) | _variable_ |             |
+| Name            | Offset                             | Length | DataType                            | Value      | Description                                                                          |
+| --------------- | ---------------------------------- | ------ | ----------------------------------- | ---------- | ------------------------------------------------------------------------------------ |
+| common          | assetPackEntryIndex \* 0x40 + 0x20 | 4      | uint32                              | 3          |                                                                                      |
+| referenceCount  | assetPackEntryIndex \* 0x40 + 0x24 | 4      | uint32                              | _variable_ | 0 if there is no image for this entry<br/><br/>1 if there is an image for this entry |
+| fence           | assetPackEntryIndex \* 0x40 + 0x28 | 4      | uint32                              | 0          |                                                                                      |
+| readFence       | assetPackEntryIndex \* 0x40 + 0x2C | 4      | uint32                              | 0          |                                                                                      |
+| identifier      | assetPackEntryIndex \* 0x40 + 0x30 | 4      | uint32                              | 0          |                                                                                      |
+| baseFlush       | assetPackEntryIndex \* 0x40 + 0x34 | 4      | uint32                              | 0xFFFF0000 |                                                                                      |
+| mipFlush        | assetPackEntryIndex \* 0x40 + 0x38 | 4      | uint32                              | 0xFFFF0000 |                                                                                      |
+| gpuTextureFetch | assetPackEntryIndex \* 0x40 + 0x3C | 24     | [GPUTextureFetch](#gputexturefetch) | _variable_ |                                                                                      |
 
 #### GPUTextureFetch
 
-| Name      | Offset                             | Length | DataType                                                                                                                                                                                                            | Value      | Description                                                     |
-| --------- | ---------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | --------------------------------------------------------------- |
-| constant0 | assetPackEntryIndex \* 0x40 + 0x3C | 4      | [GPUTextureFetchConstant0](#gputexturefetchconstant0)                                                                                                                                                               | _variable_ |                                                                 |
-| constant1 | assetPackEntryIndex \* 0x40 + 0x40 | 4      | [GPUTextureFetchConstant1](#gputexturefetchconstant1)                                                                                                                                                               | _variable_ |                                                                 |
-| constant2 | assetPackEntryIndex \* 0x40 + 0x44 | 4      | [GPUTextureSize1D](#gputexturesize1d) \| [GPUTextureSize2D](#gputexturesize2d) \| [GPUTextureSize3D](#gputexturesize3d) \| [GPUTextureSizeCube](#gputexturesizecube) \| [GPUTextureSizeStack](#gputexturesizestack) | _variable_ | Image dimensions<br/><br/>See table below to determine DataType |
-| constant3 | assetPackEntryIndex \* 0x40 + 0x48 | 4      | [GPUTextureFetchConstant3](#gputexturefetchconstant3)                                                                                                                                                               | _variable_ |                                                                 |
-| constant4 | assetPackEntryIndex \* 0x40 + 0x4C | 4      | [GPUTextureFetchConstant4](#gputexturefetchconstant4)                                                                                                                                                               | _variable_ |                                                                 |
-| constant5 | assetPackEntryIndex \* 0x50 + 0x40 | 4      | [GPUTextureFetchConstant5](#gputexturefetchconstant5)                                                                                                                                                               | _variable_ |                                                                 |
+| Name      | Offset                             | Length | DataType                                                                                                                                                                                                            | Value      | Description                                                                                                                                     |
+| --------- | ---------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| constant0 | assetPackEntryIndex \* 0x40 + 0x3C | 4      | [GPUTextureFetchConstant0](#gputexturefetchconstant0)                                                                                                                                                               | _variable_ |                                                                                                                                                 |
+| constant1 | assetPackEntryIndex \* 0x40 + 0x40 | 4      | [GPUTextureFetchConstant1](#gputexturefetchconstant1)                                                                                                                                                               | _variable_ |                                                                                                                                                 |
+| constant2 | assetPackEntryIndex \* 0x40 + 0x44 | 4      | [GPUTextureSize1D](#gputexturesize1d) \| [GPUTextureSize2D](#gputexturesize2d) \| [GPUTextureSize3D](#gputexturesize3d) \| [GPUTextureSizeCube](#gputexturesizecube) \| [GPUTextureSizeStack](#gputexturesizestack) | _variable_ | Image dimensions<br/><br/>See [GPUTextureFetch Constant2 DataType Table](#gputexturefetch-constant2-datatype-table) below to determine DataType |
+| constant3 | assetPackEntryIndex \* 0x40 + 0x48 | 4      | [GPUTextureFetchConstant3](#gputexturefetchconstant3)                                                                                                                                                               | _variable_ |                                                                                                                                                 |
+| constant4 | assetPackEntryIndex \* 0x40 + 0x4C | 4      | [GPUTextureFetchConstant4](#gputexturefetchconstant4)                                                                                                                                                               | _variable_ |                                                                                                                                                 |
+| constant5 | assetPackEntryIndex \* 0x50 + 0x40 | 4      | [GPUTextureFetchConstant5](#gputexturefetchconstant5)                                                                                                                                                               | _variable_ |                                                                                                                                                 |
+
+##### GPUTextureFetch Constant2 DataType Table
 
 Use the following table to determine the DataType of the `constant2` property of [GPUTextureFetch](#gputexturefetch). The **Stacked** column refers to the `stacked` property of [GPUTextureFetchConstant1](#gputexturefetchconstant1) and the **Dimension** column refers to the `dimension` property of [GPUTextureFetchConstant5](#gputexturefetchconstant5).
 
@@ -184,20 +218,20 @@ Use the following table to determine the DataType of the `constant2` property of
 
 #### GPUTextureFetchConstant0
 
-| Name                        | Offset                             | Mask       | Right Shift | Bitfield Width | DataType | Value      | Description                                                           |
-| --------------------------- | ---------------------------------- | ---------- | ----------- | -------------- | -------- | ---------- | --------------------------------------------------------------------- |
-| tiled                       | assetPackEntryIndex \* 0x40 + 0x3C | 0x80000000 | 31          | 1              | boolean  | 0          |                                                                       |
-| pitch                       | assetPackEntryIndex \* 0x40 + 0x3C | 0x7FC00000 | 22          | 9              | uint32   | _variable_ | TODO                                                                  |
-| unknown0                    | assetPackEntryIndex \* 0x40 + 0x3C | 0x00300000 | 20          | 2              | unit32   | 0          |                                                                       |
-| signedRepeatingFractionMode | assetPackEntryIndex \* 0x40 + 0x3C | 0x00080000 | 19          | 1              | uint32   | 0          |                                                                       |
-| clampZ                      | assetPackEntryIndex \* 0x40 + 0x3C | 0x00070000 | 16          | 3              | uint32   | 0          |                                                                       |
-| clampY                      | assetPackEntryIndex \* 0x40 + 0x3C | 0x0000E000 | 13          | 3              | uint32   | 0          |                                                                       |
-| clampX                      | assetPackEntryIndex \* 0x40 + 0x3C | 0x00001C00 | 10          | 3              | uint32   | 0          |                                                                       |
-| signW                       | assetPackEntryIndex \* 0x40 + 0x3C | 0x00000300 | 8           | 2              | uint32   | 0          |                                                                       |
-| signZ                       | assetPackEntryIndex \* 0x40 + 0x3C | 0x000000C0 | 6           | 2              | uint32   | 0          |                                                                       |
-| signY                       | assetPackEntryIndex \* 0x40 + 0x3C | 0x00000030 | 4           | 2              | uint32   | 0          |                                                                       |
-| signX                       | assetPackEntryIndex \* 0x40 + 0x3C | 0x0000000C | 2           | 2              | uint32   | 0          |                                                                       |
-| fetchConstantType           | assetPackEntryIndex \* 0x40 + 0x3C | 0x00000003 | 0           | 2              | uint32   | 2          | A value of `2` means that the set of fetch constants is for a texture |
+| Name                        | Offset                             | Mask       | Right Shift | Bitfield Width | DataType | Value      | Description                                                                                                                                                   |
+| --------------------------- | ---------------------------------- | ---------- | ----------- | -------------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| tiled                       | assetPackEntryIndex \* 0x40 + 0x3C | 0x80000000 | 31          | 1              | boolean  | 0          |                                                                                                                                                               |
+| pitch                       | assetPackEntryIndex \* 0x40 + 0x3C | 0x7FC00000 | 22          | 9              | uint32   | _variable_ | This value should equal the width of the image without padding divided by 32<br/><br/>`(AssetPackEntry.textureHeader.gpuTextureFetch.constant2.width + 1)/32` |
+| unknown0                    | assetPackEntryIndex \* 0x40 + 0x3C | 0x00300000 | 20          | 2              | unit32   | 0          |                                                                                                                                                               |
+| signedRepeatingFractionMode | assetPackEntryIndex \* 0x40 + 0x3C | 0x00080000 | 19          | 1              | uint32   | 0          |                                                                                                                                                               |
+| clampZ                      | assetPackEntryIndex \* 0x40 + 0x3C | 0x00070000 | 16          | 3              | uint32   | 0          |                                                                                                                                                               |
+| clampY                      | assetPackEntryIndex \* 0x40 + 0x3C | 0x0000E000 | 13          | 3              | uint32   | 0          |                                                                                                                                                               |
+| clampX                      | assetPackEntryIndex \* 0x40 + 0x3C | 0x00001C00 | 10          | 3              | uint32   | 0          |                                                                                                                                                               |
+| signW                       | assetPackEntryIndex \* 0x40 + 0x3C | 0x00000300 | 8           | 2              | uint32   | 0          |                                                                                                                                                               |
+| signZ                       | assetPackEntryIndex \* 0x40 + 0x3C | 0x000000C0 | 6           | 2              | uint32   | 0          |                                                                                                                                                               |
+| signY                       | assetPackEntryIndex \* 0x40 + 0x3C | 0x00000030 | 4           | 2              | uint32   | 0          |                                                                                                                                                               |
+| signX                       | assetPackEntryIndex \* 0x40 + 0x3C | 0x0000000C | 2           | 2              | uint32   | 0          |                                                                                                                                                               |
+| fetchConstantType           | assetPackEntryIndex \* 0x40 + 0x3C | 0x00000003 | 0           | 2              | uint32   | 2          | A value of `2` means that the set of fetch constants is for a texture                                                                                         |
 
 #### GPUTextureFetchConstant1
 
@@ -251,20 +285,28 @@ Use the following table to determine the DataType of the `constant2` property of
 
 #### GPUTextureFetchConstant3
 
-| Name            | Offset                             | Mask       | Right Shift | Bitfield Width | DataType | Value      | Description |
-| --------------- | ---------------------------------- | ---------- | ----------- | -------------- | -------- | ---------- | ----------- |
-| borderSize      | assetPackEntryIndex \* 0x40 + 0x48 | 0x80000000 | 31          | 1              | uint32   | 0          |             |
-| arbitraryFilter | assetPackEntryIndex \* 0x40 + 0x48 | 0x70000000 | 28          | 3              | uint32   | 0          |             |
-| anisoFilter     | assetPackEntryIndex \* 0x40 + 0x48 | 0x0E000000 | 25          | 3              | uint32   | 0          |             |
-| mipFilter       | assetPackEntryIndex \* 0x40 + 0x48 | 0x01800000 | 23          | 2              | uint32   | 0          |             |
-| minFilter       | assetPackEntryIndex \* 0x40 + 0x48 | 0x00600000 | 21          | 2              | uint32   | 0          |             |
-| magFilter       | assetPackEntryIndex \* 0x40 + 0x48 | 0x00180000 | 19          | 2              | uint32   | 0          |             |
-| expAdjust       | assetPackEntryIndex \* 0x40 + 0x48 | 0x0007E000 | 13          | 6              | uint32   | 0          |             |
-| swizzleW        | assetPackEntryIndex \* 0x40 + 0x48 | 0x00001C00 | 10          | 3              | uint32   | 3          |             |
-| swizzleZ        | assetPackEntryIndex \* 0x40 + 0x48 | 0x00000380 | 7           | 3              | uint32   | _variable_ | TODO        |
-| swizzleY        | assetPackEntryIndex \* 0x40 + 0x48 | 0x00000070 | 4           | 3              | uint32   | 1          |             |
-| swizzleX        | assetPackEntryIndex \* 0x40 + 0x48 | 0x0000000E | 1           | 3              | uint32   | _variable_ | TODO        |
-| numFormat       | assetPackEntryIndex \* 0x40 + 0x48 | 0x00000001 | 0           | 1              | uint32   | 0          |             |
+| Name            | Offset                             | Mask       | Right Shift | Bitfield Width | DataType | Value      | Description                                                                                                                                                                      |
+| --------------- | ---------------------------------- | ---------- | ----------- | -------------- | -------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| borderSize      | assetPackEntryIndex \* 0x40 + 0x48 | 0x80000000 | 31          | 1              | uint32   | 0          |                                                                                                                                                                                  |
+| arbitraryFilter | assetPackEntryIndex \* 0x40 + 0x48 | 0x70000000 | 28          | 3              | uint32   | 0          |                                                                                                                                                                                  |
+| anisoFilter     | assetPackEntryIndex \* 0x40 + 0x48 | 0x0E000000 | 25          | 3              | uint32   | 0          |                                                                                                                                                                                  |
+| mipFilter       | assetPackEntryIndex \* 0x40 + 0x48 | 0x01800000 | 23          | 2              | uint32   | 0          |                                                                                                                                                                                  |
+| minFilter       | assetPackEntryIndex \* 0x40 + 0x48 | 0x00600000 | 21          | 2              | uint32   | 0          |                                                                                                                                                                                  |
+| magFilter       | assetPackEntryIndex \* 0x40 + 0x48 | 0x00180000 | 19          | 2              | uint32   | 0          |                                                                                                                                                                                  |
+| expAdjust       | assetPackEntryIndex \* 0x40 + 0x48 | 0x0007E000 | 13          | 6              | uint32   | 0          |                                                                                                                                                                                  |
+| swizzleW        | assetPackEntryIndex \* 0x40 + 0x48 | 0x00001C00 | 10          | 3              | uint32   | _variable_ | When reading an asset file, see [Example Swizzle Function](#example-swizzle-function) for how the value should be used<br/><br/>When creating an asset file, this value can be 3 |
+| swizzleZ        | assetPackEntryIndex \* 0x40 + 0x48 | 0x00000380 | 7           | 3              | uint32   | _variable_ | When reading an asset file, see [Example Swizzle Function](#example-swizzle-function) for how the value should be used<br/><br/>When creating an asset file, this value can be 2 |
+| swizzleY        | assetPackEntryIndex \* 0x40 + 0x48 | 0x00000070 | 4           | 3              | uint32   | _variable_ | When reading an asset file, see [Example Swizzle Function](#example-swizzle-function) for how the value should be used<br/><br/>When creating an asset file, this value can be 1 |
+| swizzleX        | assetPackEntryIndex \* 0x40 + 0x48 | 0x0000000E | 1           | 3              | uint32   | _variable_ | When reading an asset file, see [Example Swizzle Function](#example-swizzle-function) for how the value should be used<br/><br/>When creating an asset file, this value can be 0 |
+| numFormat       | assetPackEntryIndex \* 0x40 + 0x48 | 0x00000001 | 0           | 1              | uint32   | 0          |                                                                                                                                                                                  |
+
+##### Example Swizzle Function
+
+```python
+def swizzle(buf, x, y, z, w):
+    for i in range(0, len(buf), 4):
+        (buf[i], buf[i + 1], buf[i + 2], buf[i + 3]) = (buf[i + x], buf[i + y], buf[i + z], buf[i + w])
+```
 
 #### GPUTextureFetchConstant4
 
@@ -290,7 +332,7 @@ Use the following table to determine the DataType of the `constant2` property of
 | anisoBias     | assetPackEntryIndex \* 0x50 + 0x40 | 0x000001E0 | 5           | 4              | uint32   | 0     |                                                                                         |
 | triClamp      | assetPackEntryIndex \* 0x50 + 0x40 | 0x00000018 | 3           | 2              | uint32   | 0     |                                                                                         |
 | forceBcwToMax | assetPackEntryIndex \* 0x50 + 0x40 | 0x00000004 | 2           | 1              | uint32   | 0     |                                                                                         |
-| borderColor   | assetPackEntryIndex \* 0x50 + 0x40 | 0x00000003 | 0           | 2              | uint32   | 0     | 0x80000000                                                                              |
+| borderColor   | assetPackEntryIndex \* 0x50 + 0x40 | 0x00000003 | 0           | 2              | uint32   | 0     |                                                                                         |
 
 ### Enums
 
@@ -337,7 +379,7 @@ Use the following table to determine the DataType of the `constant2` property of
 
 _This list is incomplete_
 
-| Flag                | Hex  | Binary | Decimal | Description                                                                                                                                                                                                                                 |
-| ------------------- | ---- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| TextureFormat.BGRA8 | 0x06 | 000110 | 6       | Image data is not compressed<br/><br/>For each `byte[4]` of `Asset.imageData`, the first byte represents the blue value of the pixel, the second byte represents green, the third byte represents red, and the fourth byte represents alpha |
-| TextureFormat.BC3   | 0x14 | 010100 | 20      | Image data is compressed as BC3<br/><br/>See [DXT4 or DXT5](https://en.wikipedia.org/wiki/S3_Texture_Compression#DXT4_and_DXT5)                                                                                                             |
+| Flag                | Hex  | Binary | Decimal | Description                                                                                                                                                                                                                                                                                                                                                  |
+| ------------------- | ---- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| TextureFormat.RGBA8 | 0x06 | 000110 | 6       | Image data is not compressed<br/><br/>For each `byte[4]` of `Asset.imageData`, the first byte represents the red value of the pixel, the second byte represents green, the third byte represents blue, and the fourth byte represents alpha<br/><br/>Note: Depending on the endian and swizzle values for the texture, the raw data may not be in RGBA order |
+| TextureFormat.BC3   | 0x14 | 010100 | 20      | Image data is compressed as BC3<br/><br/>See [DXT4 or DXT5](https://en.wikipedia.org/wiki/S3_Texture_Compression#DXT4_and_DXT5)                                                                                                                                                                                                                              |
